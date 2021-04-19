@@ -34,6 +34,10 @@ public class GoldenDupes extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onCraftItem(PrepareItemCraftEvent e) {
 
+        if(e.getRecipe() == null)
+            return;
+        e.getView().getPlayer().sendMessage("recipe is "+e.getRecipe().getResult());
+
         final UUID player_uuid = e.getView().getPlayer().getUniqueId();
         if(dupeSpeedLimit.containsKey(player_uuid))
             return;
