@@ -6,8 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -23,36 +24,46 @@ public class GoldenDupes extends JavaPlugin implements Listener {
 
     final Map<UUID, Integer> dupeAmnt = new TreeMap<>();
     final Map<UUID, Integer> dupeTask = new TreeMap<>();
-    final Map<UUID, Boolean> dupeSpeedLimit = new TreeMap<>();
+    final Map<UUID, Boolean> clickValidity = new TreeMap<>();
 
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onClickInv(InventoryClickEvent e) {
+        clickValidity.put(e.getWhoClicked().getUniqueId(), false);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            clickValidity.remove(e.getWhoClicked().getUniqueId());
+        }, 1L);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onDragInv(InventoryDragEvent e) {
+
+        clickValidity.put(e.getWhoClicked().getUniqueId(), false);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+            clickValidity.remove(e.getWhoClicked().getUniqueId());
+        }, 1L);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onCraftItem(PrepareItemCraftEvent e) {
 
-        if(e.getRecipe() == null)
-            return;
-
         final UUID player_uuid = e.getView().getPlayer().getUniqueId();
-        if(dupeSpeedLimit.containsKey(player_uuid)) {
-            if (dupeSpeedLimit.get(player_uuid)) {
-                int currentAmnt = dupeAmnt.getOrDefault(player_uuid, 0);
-                dupeAmnt.put(player_uuid, currentAmnt+2);
-                dupeSpeedLimit.put(player_uuid, false);
-            }
+        if(clickValidity.containsKey(player_uuid)) {
             return;
         }
-        dupeSpeedLimit.put(player_uuid, true);
+
+        int currentAmnt = dupeAmnt.getOrDefault(player_uuid, 0);
+        dupeAmnt.put(player_uuid, currentAmnt+2);
+
         cancelDupeClearTask(player_uuid);
-        int newTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            dupeAmnt.remove(player_uuid);
-        }, 20L);
+        dupeTask.put(player_uuid,
+                Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+                dupeAmnt.remove(player_uuid);
+                }, 20L));
 
-        dupeTask.put(player_uuid, newTask);
-
+        clickValidity.put(player_uuid, false);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            dupeSpeedLimit.remove(player_uuid);
+            clickValidity.remove(player_uuid);
         }, 0L);
-
     }
 
     private void cancelDupeClearTask(UUID player) {
