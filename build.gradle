@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = 'https://nexus.umbcraft.online/repository/umbcraft-pub/'
+    }
+    maven {
+        url = 'https://nexus.umbcraft.online/repository/proxies/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+}
+
+group = 'online.umbcraft.libraries'
+version = '1.0.2'
+description = 'Golden Dupes - dupes from the Golden days of minecraft!'
+sourceCompatibility = '1.8'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
