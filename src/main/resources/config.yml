@@ -1,0 +1,40 @@
+
+#  1.12.2 autocraft dupe
+autocraft-dupe:
+
+  enabled: true
+
+#  does the dupe try to be as vanilla as possible (overrides a lot of config settings)
+  vanilla: false
+
+#  does the dupe give more items the more times the autocraft was clicked?
+#     false =  the dupe gives the max number of items regardless of number of clicks
+#     true  =  the dupe gives (number of clicks) * (multiplier) items
+  items-by-click: true
+
+#  only relevant if the items-per-click is set to true
+  multiplier: 2
+
+# the largest amount of items this dupe can give (capped at 64)
+  max-items: 64
+
+
+
+non-stackables:
+  dupe: true
+  stack-to: 64
+
+shulkers:
+  dupe: true
+  stack-to: 1
+
+totems:
+  dupe: true
+  stack-to: 4
+
+
+
+
+
+
+
