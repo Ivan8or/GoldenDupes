@@ -27,26 +27,22 @@ public class GoldenDupes extends JavaPlugin implements Listener {
 
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onCraftItem(CraftItemEvent e) {
-        Bukkit.broadcastMessage("Crafted item!");
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
     public void onCraftItem(PrepareItemCraftEvent e) {
 
         if(e.getRecipe() == null)
             return;
-        e.getView().getPlayer().sendMessage("recipe is "+e.getRecipe().getResult());
 
         final UUID player_uuid = e.getView().getPlayer().getUniqueId();
-        if(dupeSpeedLimit.containsKey(player_uuid))
+        if(dupeSpeedLimit.containsKey(player_uuid)) {
+            if (dupeSpeedLimit.get(player_uuid)) {
+                int currentAmnt = dupeAmnt.getOrDefault(player_uuid, 0);
+                dupeAmnt.put(player_uuid, currentAmnt+2);
+                dupeSpeedLimit.put(player_uuid, false);
+            }
             return;
-
+        }
         dupeSpeedLimit.put(player_uuid, true);
-        int currentAmnt = dupeAmnt.getOrDefault(player_uuid, 0);
-        dupeAmnt.put(player_uuid, currentAmnt+2);
         cancelDupeClearTask(player_uuid);
-
         int newTask = Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             dupeAmnt.remove(player_uuid);
         }, 20L);
