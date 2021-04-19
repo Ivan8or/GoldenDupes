@@ -109,6 +109,7 @@ public class GoldenDupes extends JavaPlugin implements Listener {
         for(int i = 1; i < final_amount; i++) {
             p.getInventory().addItem(stack);
         }
+
         dupeAmnt.remove(p.getUniqueId());
     }
 }
