@@ -181,7 +181,7 @@ public class AutocraftDupe implements Listener {
 
 
         // the max stack size for unstackable items
-        int nonstack_size = plugin.getConfig().getInt(ConfigPath.NON_STACK_STACKSIZE.path());
+        final int nonstack_size = plugin.getConfig().getInt(ConfigPath.NON_STACK_STACKSIZE.path());
 
         // the max stack size for totems; defaults to the unstackable cap if set to less than 0
         int totem_size = plugin.getConfig().getInt(ConfigPath.TOTEMS_STACKSIZE.path());
