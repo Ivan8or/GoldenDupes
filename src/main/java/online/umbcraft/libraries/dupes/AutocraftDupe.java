@@ -130,8 +130,6 @@ public class AutocraftDupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemPickup(final EntityPickupItemEvent e) {
 
-        e.getEntity().sendMessage("picked up item!");
-
         if (!(e.getEntity() instanceof Player))
             return;
 
