@@ -1,7 +1,15 @@
 
+###########################
+# GoldenDupes Dupe Plugin #
+###########################
+#    by Ivan Volkov
+#    @Ivan8or#7412 on discord
+#
+
 #  1.12.2 autocraft dupe
 autocraft-dupe:
 
+# is this dupe enabled?
   enabled: true
 
 #  does the dupe try to be as vanilla as possible (overrides a lot of config settings)
@@ -19,17 +27,29 @@ autocraft-dupe:
   max-items: 64
 
 
+########################
+# GLOBAL ITEM SETTINGS #
+########################
 
+# any non-64 stacked item (buckets, armor, tools, et.)
 non-stackables:
+# can they be duped?
   dupe: true
+# what is the max duped stack size?
   stack-to: 64
 
+# shulker boxes of any color
 shulkers:
+# can they be duped?
   dupe: true
+# what is the max duped stack size?
   stack-to: 1
 
+# totems pf undying
 totems:
+# can they be duped?
   dupe: true
+# what is the max duped stack size?
   stack-to: 4
 
 
