@@ -130,6 +130,8 @@ public class AutocraftDupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemPickup(final EntityPickupItemEvent e) {
 
+        e.getEntity().sendMessage("picked up item!");
+
         if (!(e.getEntity() instanceof Player))
             return;
 
@@ -149,18 +151,19 @@ public class AutocraftDupe implements Listener {
                 ? 64 : decideAmount(stack.getType(), p.getUniqueId());
 
 
+        e.getEntity().sendMessage("stacksize is "+stacksize);
         // stacksize of 1 is a special case; this gives an extra item to the player without affecting the existing item
-        if(stacksize == 1) {
-            ItemStack toAdd = stack.clone();
-            toAdd.setAmount(1);
-            p.getInventory().addItem(toAdd);
-        }
-        else {
-            stack.setAmount(stacksize);
-            p.getInventory().addItem(stack);
+
+        ItemStack toAdd = stack.clone();
+        toAdd.setAmount(stacksize);
+        p.getInventory().addItem(toAdd);
+
+        if(stacksize != 1) { // this is a silly way to do it, but spigot api is poopy
+            e.getItem().remove();
+            e.setCancelled(true);
         }
 
-        // player only dupes the first item he picks up
+        // player only tries to dupe the first item he picks up
         dupeAmnt.remove(p.getUniqueId());
     }
 
