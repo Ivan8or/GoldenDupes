@@ -38,26 +38,29 @@ public class AutocraftDupe implements Listener {
         this.plugin = plugin;
     }
 
-    // prevents the player from getting an extra item if they touch the crafting table normally
+
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onClickInv(final InventoryClickEvent e) {
 
-        clickValidity.put(e.getWhoClicked().getUniqueId(), false);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            clickValidity.remove(e.getWhoClicked().getUniqueId());
-        }, 1L);
+       denyDupeClick(e.getWhoClicked().getUniqueId());
+
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onDragInv(final InventoryDragEvent e) {
+
+        denyDupeClick(e.getWhoClicked().getUniqueId());
 
     }
 
     // prevents the player from getting an extra item if they touch the crafting table normally
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onDragInv(final InventoryDragEvent e) {
+    public void denyDupeClick(UUID player) {
+        clickValidity.put(player, false);
 
-        clickValidity.put(e.getWhoClicked().getUniqueId(), false);
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            clickValidity.remove(e.getWhoClicked().getUniqueId());
+            clickValidity.remove(player);
         }, 1L);
-
     }
 
 
@@ -130,19 +133,14 @@ public class AutocraftDupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemPickup(final EntityPickupItemEvent e) {
 
-        if (!(e.getEntity() instanceof Player))
-            return;
-
-        final Player p = (Player) e.getEntity();
-
-
-        // players who didn't do the dupe are not affected
-        if (!dupeAmnt.containsKey(p.getUniqueId())) {
+        // players who didn't do the dupe / other entities are not affected
+        if (!dupeAmnt.containsKey(e.getEntity().getUniqueId())) {
             return;
         }
 
-
+        final Player p = (Player) e.getEntity();
         final ItemStack stack = e.getItem().getItemStack();
+
 
         // set stacksize to 64 if vanilla, get correct size otherwise
         int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
@@ -166,6 +164,7 @@ public class AutocraftDupe implements Listener {
     }
 
 
+    // decides how much of a duped item a player receives
     private int decideAmount(Material m, UUID uuid) {
 
         // defaults to the max amount of items the player can receive
