@@ -18,6 +18,12 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 }
 
+final String basePackage = "online.umbcraft.libs"
+
+shadowJar {
+    relocate "org.bstats", "${basePackage}.org.bstats"
+}
+
 group = 'online.umbcraft.libraries'
 version = '1.2.8'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
