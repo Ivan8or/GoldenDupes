@@ -27,6 +27,16 @@ autocraft-dupe:
   max-items: 64
 
 
+#  1.15 autocraft dupe
+donkey-dupe:
+
+  # is this dupe enabled?
+  enabled: true
+
+  # do donkeys in boats get duped when a player dc's riding the boat / donkey?
+  do-boats: true
+
+
 ########################
 # GLOBAL ITEM SETTINGS #
 ########################

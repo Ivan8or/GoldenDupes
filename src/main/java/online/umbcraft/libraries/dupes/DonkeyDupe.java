@@ -1,6 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
+import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -21,14 +22,19 @@ public class DonkeyDupe implements Listener {
     }
 
 
+    // detects for players viewing the donkey's inventory whenever a player dc's riding a donkey
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLeave(PlayerQuitEvent e) {
 
         Entity vehicle = e.getPlayer().getVehicle();
-        traverseBoat(vehicle);
+
+        if(plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.name()))
+            traverseBoat(vehicle);
+        else
+            dupeInventory(vehicle);
     }
 
-
+    // dupes inventories of all dokeys/llamas/mules in a boat
     private void traverseBoat(Entity riding) {
         Boat boat = null;
 
@@ -47,6 +53,7 @@ public class DonkeyDupe implements Listener {
         dupeInventory(riding);
     }
 
+    // dupes the inventory of a donkey/llama/mule for all players viewing it
     private void dupeInventory(Entity riding) {
 
         if (!(riding instanceof AbstractHorse))
@@ -55,6 +62,8 @@ public class DonkeyDupe implements Listener {
         AbstractHorse donkey = (AbstractHorse) riding;
         Inventory cloned = clone(donkey);
         List<HumanEntity> viewers = donkey.getInventory().getViewers();
+
+        // weird iteration because iterators gave too much trouble
         for (int i = viewers.size() - 1; i >= 0; i--) {
             HumanEntity human = viewers.get(i);
             human.closeInventory();
@@ -62,6 +71,7 @@ public class DonkeyDupe implements Listener {
         }
     }
 
+    // creates a copy of a donkey/llama/mule inventory
     private Inventory clone(AbstractHorse donkey) {
 
         Inventory toClone = donkey.getInventory();

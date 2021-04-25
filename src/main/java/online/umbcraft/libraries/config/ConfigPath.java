@@ -5,10 +5,10 @@ public enum ConfigPath {
 //  1.12 autocraft dupe root path
     AUTOCRAFT("autocraft-dupe"),
 
-//      is the 1.12 autocraft dupe enabled?
+//      is the autocraft dupe enabled?
         AUTOCRAFT_DO(AUTOCRAFT.path() + ".enabled"),
 
-//      should the 1.12 autocraft dupe act as vanilla as possible
+//      should the autocraft dupe act as vanilla as possible
         AUTOCRAFT_VANILLA(AUTOCRAFT.path() + ".vanilla"),
 
 //      should the autocraft dupe give more items the more clicks the player has made
@@ -19,6 +19,18 @@ public enum ConfigPath {
 
 //      what is the multiplier for the items received based on number of clicks
     AUTOCRAFT_MAX_ITEMS(AUTOCRAFT.path() + ".max-items"),
+
+
+
+    //  1.15 donkey dupe root path
+DONKEY("autocraft-dupe"),
+
+    //      is the donkey dupe enabled?
+    DONKEY_DO(DONKEY.path() + ".enabled"),
+
+    //      should the autocraft dupe work on donkeys/llamas/mules inside boats
+    DONKEY_BOATS(DONKEY.path() + ".boats"),
+
 
 
 //  item limits root path

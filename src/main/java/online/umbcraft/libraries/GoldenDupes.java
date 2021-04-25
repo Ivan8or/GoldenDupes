@@ -28,9 +28,11 @@ public final class GoldenDupes extends JavaPlugin {
                     new AutocraftDupe(this), this);
         }
 
-        Bukkit.getServer().getPluginManager().registerEvents(
-                new DonkeyDupe(this), this);
-
+        // starts autocraft dupe handler if the dupe is enabled
+        if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
+            Bukkit.getServer().getPluginManager().registerEvents(
+                    new DonkeyDupe(this), this);
+        }
 
     }
 
