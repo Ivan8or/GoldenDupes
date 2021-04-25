@@ -1,7 +1,5 @@
 package online.umbcraft.libraries.dupes;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import online.umbcraft.libraries.GoldenDupes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -22,15 +20,16 @@ public class DonkeyDupe implements Listener {
         this.plugin = plugin;
     }
 
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLeave(PlayerQuitEvent e) {
 
         Entity vehicle = e.getPlayer().getVehicle();
-        dupeInventoryR(vehicle);
+        traverseBoat(vehicle);
     }
 
-    private void dupeInventoryR(Entity riding) {
 
+    private void traverseBoat(Entity riding) {
         Boat boat = null;
 
         if (riding instanceof Boat)
@@ -39,10 +38,16 @@ public class DonkeyDupe implements Listener {
         if (riding.getVehicle() instanceof Boat)
             boat = (Boat) riding.getVehicle();
 
-        if (boat != null)
+        if (boat != null) {
             for (Entity passenger : boat.getPassengers()) {
-                dupeInventoryR(passenger);
+                dupeInventory(passenger);
             }
+            return;
+        }
+        dupeInventory(riding);
+    }
+
+    private void dupeInventory(Entity riding) {
 
         if (!(riding instanceof AbstractHorse))
             return;
@@ -52,7 +57,6 @@ public class DonkeyDupe implements Listener {
         List<HumanEntity> viewers = donkey.getInventory().getViewers();
         for (int i = viewers.size() - 1; i >= 0; i--) {
             HumanEntity human = viewers.get(i);
-            System.out.println("opening for " + human.getName());
             human.closeInventory();
             human.openInventory(cloned);
         }
