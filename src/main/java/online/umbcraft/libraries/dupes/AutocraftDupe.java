@@ -149,8 +149,6 @@ public class AutocraftDupe implements Listener {
         int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
                 ? 64 : decideAmount(stack.getType(), p.getUniqueId());
 
-
-        e.getEntity().sendMessage("stacksize is " + stacksize);
         // stacksize of 1 is a special case; this gives an extra item to the player without affecting the existing item
 
         ItemStack toAdd = stack.clone();

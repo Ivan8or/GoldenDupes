@@ -4,6 +4,7 @@ import online.umbcraft.libraries.config.ConfigAutofill;
 import online.umbcraft.libraries.config.ConfigPath;
 import online.umbcraft.libraries.dupes.AutocraftDupe;
 import online.umbcraft.libraries.dupes.DonkeyDupe;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +13,10 @@ public final class GoldenDupes extends JavaPlugin {
 
 
     public void onEnable() {
+
+        //bStats metrics
+        new Metrics(this, 11145);
+
 
         // fixing up config if it doesn't have some particular settings
         ConfigAutofill.autofill(this);

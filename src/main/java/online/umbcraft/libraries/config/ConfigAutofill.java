@@ -8,7 +8,6 @@ import java.io.File;
 public class ConfigAutofill {
 
     public static void autofill(Plugin plugin) {
-
         File configFile = new File(plugin.getDataFolder(), "config.yml");
 
         if (!configFile.exists()) {
@@ -17,11 +16,14 @@ public class ConfigAutofill {
         }
 
         FileConfiguration config = plugin.getConfig();
-
+        int updates = 0;
         for(ConfigPath setting: ConfigPath.values()) {
             if(!config.contains(setting.path())) {
+                updates++;
                 config.set(setting.path(), setting.value());
             }
         }
+        if(updates > 0)
+            plugin.saveConfig();
     }
 }
