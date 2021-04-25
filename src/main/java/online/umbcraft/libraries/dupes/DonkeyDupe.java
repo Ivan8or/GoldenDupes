@@ -23,7 +23,7 @@ public class DonkeyDupe implements Listener {
 
 
     // detects for players viewing the donkey's inventory whenever a player dc's riding a donkey
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLeave(PlayerQuitEvent e) {
 
         Entity vehicle = e.getPlayer().getVehicle();

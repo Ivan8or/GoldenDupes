@@ -1,14 +1,11 @@
 package online.umbcraft.libraries;
 
+import online.umbcraft.libraries.config.ConfigAutofill;
 import online.umbcraft.libraries.config.ConfigPath;
 import online.umbcraft.libraries.dupes.AutocraftDupe;
 import online.umbcraft.libraries.dupes.DonkeyDupe;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 
 public final class GoldenDupes extends JavaPlugin {
@@ -16,10 +13,8 @@ public final class GoldenDupes extends JavaPlugin {
 
     public void onEnable() {
 
-        // creating default config if it does not exist
-        File configFile = new File(this.getDataFolder(), "config.yml");
-        if (!configFile.exists())
-            this.saveDefaultConfig();
+        // fixing up config if it doesn't have some particular settings
+        ConfigAutofill.autofill(this);
 
 
         // starts autocraft dupe handler if the dupe is enabled

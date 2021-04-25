@@ -18,7 +18,7 @@ dependencies {
 }
 
 group = 'online.umbcraft.libraries'
-version = '1.2.5'
+version = '1.2.6'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 
