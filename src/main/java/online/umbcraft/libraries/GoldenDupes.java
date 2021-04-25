@@ -2,6 +2,7 @@ package online.umbcraft.libraries;
 
 import online.umbcraft.libraries.config.ConfigPath;
 import online.umbcraft.libraries.dupes.AutocraftDupe;
+import online.umbcraft.libraries.dupes.DonkeyDupe;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -22,10 +23,14 @@ public final class GoldenDupes extends JavaPlugin {
 
 
         // starts autocraft dupe handler if the dupe is enabled
-        if(getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
+        if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
             Bukkit.getServer().getPluginManager().registerEvents(
                     new AutocraftDupe(this), this);
         }
+
+        Bukkit.getServer().getPluginManager().registerEvents(
+                new DonkeyDupe(this), this);
+
 
     }
 

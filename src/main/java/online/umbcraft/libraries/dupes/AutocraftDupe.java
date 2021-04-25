@@ -39,8 +39,7 @@ public class AutocraftDupe implements Listener {
 
     public AutocraftDupe(GoldenDupes plugin) {
         this.plugin = plugin;
-
-
+        
         // building an EnumSet of all shulkers
         shulkerBoxes = EnumSet.noneOf(Material.class);
         Arrays.stream(Material.values()).filter(m -> m.toString().endsWith("SHULKER_BOX")).forEach(shulkerBoxes::add);
@@ -49,16 +48,13 @@ public class AutocraftDupe implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onClickInv(final InventoryClickEvent e) {
-
         denyDupeClick(e.getWhoClicked().getUniqueId());
-
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDragInv(final InventoryDragEvent e) {
 
         denyDupeClick(e.getWhoClicked().getUniqueId());
-
     }
 
     // prevents the player from getting an extra item if they touch the crafting table normally

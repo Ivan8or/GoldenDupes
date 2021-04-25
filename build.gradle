@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 repositories {
@@ -18,17 +18,10 @@ dependencies {
 }
 
 group = 'online.umbcraft.libraries'
-version = '1.1.6'
+version = '1.2.0'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
