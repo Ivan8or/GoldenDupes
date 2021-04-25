@@ -1,5 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import online.umbcraft.libraries.GoldenDupes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -9,7 +11,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 
-public class DonkeyDupe  implements Listener {
+import java.util.List;
+
+
+public class DonkeyDupe implements Listener {
 
     GoldenDupes plugin;
 
@@ -17,26 +22,48 @@ public class DonkeyDupe  implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLeave(PlayerQuitEvent e) {
 
         Entity vehicle = e.getPlayer().getVehicle();
-        if(vehicle == null || !(vehicle instanceof Donkey))
+        dupeInventoryR(vehicle);
+    }
+
+    private void dupeInventoryR(Entity riding) {
+
+        Boat boat = null;
+
+        if (riding instanceof Boat)
+            boat = (Boat) riding;
+
+        if (riding.getVehicle() instanceof Boat)
+            boat = (Boat) riding.getVehicle();
+
+        if (boat != null)
+            for (Entity passenger : boat.getPassengers()) {
+                dupeInventoryR(passenger);
+            }
+
+        if (!(riding instanceof AbstractHorse))
             return;
 
-        Donkey donkey = (Donkey) vehicle;
-
-        for(HumanEntity human: donkey.getInventory().getViewers()) {
+        AbstractHorse donkey = (AbstractHorse) riding;
+        Inventory cloned = clone(donkey);
+        List<HumanEntity> viewers = donkey.getInventory().getViewers();
+        for (int i = viewers.size() - 1; i >= 0; i--) {
+            HumanEntity human = viewers.get(i);
+            System.out.println("opening for " + human.getName());
             human.closeInventory();
-            human.openInventory(cloneInventory(donkey.getInventory()));
+            human.openInventory(cloned);
         }
     }
 
-    private Inventory cloneInventory(Inventory toClone) {
-        Inventory result = Bukkit.createInventory(null, toClone.getType(), "DUPED INVENTORY");
+    private Inventory clone(AbstractHorse donkey) {
 
-        result.setItem(0, toClone.getItem(0));
-        for(int i = 2; i <= 16; i++) {
+        Inventory toClone = donkey.getInventory();
+        Inventory result = Bukkit.createInventory(null, toClone.getType());
+
+        for (int i = 0; i <= 16; i++) {
             result.setItem(i, toClone.getItem(i));
         }
         return result;
