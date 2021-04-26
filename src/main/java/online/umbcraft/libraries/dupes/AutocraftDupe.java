@@ -37,12 +37,14 @@ public class AutocraftDupe implements Listener {
     final private GoldenDupes plugin;
 
 
-    public AutocraftDupe(GoldenDupes plugin) {
+    public AutocraftDupe(final GoldenDupes plugin) {
         this.plugin = plugin;
         
         // building an EnumSet of all shulkers
         shulkerBoxes = EnumSet.noneOf(Material.class);
-        Arrays.stream(Material.values()).filter(m -> m.toString().endsWith("SHULKER_BOX")).forEach(shulkerBoxes::add);
+        Arrays.stream(Material.values())
+                .filter(m -> m.toString().endsWith("SHULKER_BOX"))
+                .forEach(shulkerBoxes::add);
     }
 
 
@@ -58,7 +60,7 @@ public class AutocraftDupe implements Listener {
     }
 
     // prevents the player from getting an extra item if they touch the crafting table normally
-    public void denyDupeClick(UUID player) {
+    public void denyDupeClick(final UUID player) {
         clickValidity.put(player, false);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -71,32 +73,32 @@ public class AutocraftDupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onCraftItem(final PrepareItemCraftEvent e) {
 
-        final UUID player_uuid = e.getView().getPlayer().getUniqueId();
+        final UUID playerUUID = e.getView().getPlayer().getUniqueId();
 
 
         // no extra items if the player didn't autocomplete the recipe
-        if (clickValidity.containsKey(player_uuid)) {
+        if (clickValidity.containsKey(playerUUID)) {
             return;
         }
 
 
         // increment the number of extra items by 2
-        final int currentAmnt = dupeAmnt.getOrDefault(player_uuid, 0);
-        dupeAmnt.put(player_uuid, currentAmnt + 2);
+        final int currentAmnt = dupeAmnt.getOrDefault(playerUUID, 0);
+        dupeAmnt.put(playerUUID, currentAmnt + 2);
 
 
         // prolongs the time until the extra items reset to 0 by one second
-        cancelDupeClearTask(player_uuid);
-        dupeTask.put(player_uuid,
+        cancelDupeClearTask(playerUUID);
+        dupeTask.put(playerUUID,
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    dupeAmnt.remove(player_uuid);
+                    dupeAmnt.remove(playerUUID);
                 }, 50L));
 
 
         // makes the next click(s) this game tick not give extra items; needed due to how PrepareItemCraftEvent gets triggered
-        clickValidity.put(player_uuid, false);
+        clickValidity.put(playerUUID, false);
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            clickValidity.remove(player_uuid);
+            clickValidity.remove(playerUUID);
         }, 0L);
 
     }
@@ -146,12 +148,12 @@ public class AutocraftDupe implements Listener {
 
 
         // set stacksize to 64 if vanilla, get correct size otherwise
-        int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
+        final int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
                 ? 64 : decideAmount(stack.getType(), p.getUniqueId());
 
         // stacksize of 1 is a special case; this gives an extra item to the player without affecting the existing item
 
-        ItemStack toAdd = stack.clone();
+        final ItemStack toAdd = stack.clone();
         toAdd.setAmount(stacksize);
         p.getInventory().addItem(toAdd);
 
@@ -166,54 +168,54 @@ public class AutocraftDupe implements Listener {
 
 
     // decides how much of a duped item a player receives
-    private int decideAmount(Material m, UUID uuid) {
+    private int decideAmount(final Material m, final UUID uuid) {
 
-        FileConfiguration config = plugin.getConfig();
+        final FileConfiguration config = plugin.getConfig();
         // defaults to the max amount of items the player can receive
-        int player_earned = Math.min(
+        int playerEarned = Math.min(
                 64,
                 config.getInt(ConfigPath.AUTOCRAFT_MAX_ITEMS.path()));
 
 
         // if Items-Per-Click is enabled, uses the smaller between that value and the maximum
         if (config.getBoolean(ConfigPath.AUTOCRAFT_IPC.path()))
-            player_earned = Math.min(
-                    player_earned,
+            playerEarned = Math.min(
+                    playerEarned,
                     dupeAmnt.get(uuid) * config.getInt(ConfigPath.AUTOCRAFT_MULTIPLIER.path()));
 
 
         // the max stack size for unstackable items
-        final int nonstack_size = config.getInt(ConfigPath.NON_STACK_STACKSIZE.path());
+        final int nonStackSize = config.getInt(ConfigPath.NON_STACK_STACKSIZE.path());
 
         // the max stack size for totems; defaults to the unstackable cap if set to less than 0
-        int totem_size = config.getInt(ConfigPath.TOTEMS_STACKSIZE.path());
-        totem_size = (totem_size < 0) ? nonstack_size : totem_size;
+        final int totemConfig = config.getInt(ConfigPath.TOTEMS_STACKSIZE.path());
+        final int totemSize = (totemConfig < 0) ? nonStackSize : totemConfig;
 
         // the max stack size for shulkers; defaults to the unstackable cap if set to less than 0
-        int shulker_size = config.getInt(ConfigPath.SHULKERS_STACKSIZE.path());
-        shulker_size = (shulker_size < 0) ? nonstack_size : shulker_size;
+        final int shulkerConfig = config.getInt(ConfigPath.SHULKERS_STACKSIZE.path());
+        final int shulkerSize = (shulkerConfig < 0) ? nonStackSize : shulkerConfig;
 
 
         // if the item is a totem, uses the smaller of what the player should get, and the maximum totem size
         if (m == Material.TOTEM_OF_UNDYING)
             return (config.getBoolean(ConfigPath.TOTEMS_DO_DUPE.path())) ?
-                    Math.min(player_earned, totem_size) : 0;
+                    Math.min(playerEarned, totemSize) : 0;
 
 
         // if the item is a shulker box, uses the smaller of what the player should get, and the maximum shulker size
         if (shulkerBoxes.contains(m))
             return (config.getBoolean(ConfigPath.SHULKERS_DO_DUPE.path())) ?
-                    Math.min(player_earned, shulker_size) : 0;
+                    Math.min(playerEarned, shulkerSize) : 0;
 
 
         // if the item is any other nonstackable, uses the smaller of what the player should get, and the maximum stackable size
         if (m.getMaxStackSize() != 64)
             return (config.getBoolean(ConfigPath.NON_STACK_DO_DUPE.path())) ?
-                    Math.min(player_earned, nonstack_size) : 0;
+                    Math.min(playerEarned, nonStackSize) : 0;
 
 
         // if the item is stackable to 64, returns the regular amount earned by the player
-        return player_earned;
+        return playerEarned;
     }
 
 

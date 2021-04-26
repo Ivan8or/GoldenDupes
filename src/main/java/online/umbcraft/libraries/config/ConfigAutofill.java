@@ -8,6 +8,7 @@ import java.io.File;
 public class ConfigAutofill {
 
     public static void autofill(Plugin plugin) {
+
         File configFile = new File(plugin.getDataFolder(), "config.yml");
 
         if (!configFile.exists()) {

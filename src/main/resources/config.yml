@@ -23,7 +23,7 @@ autocraft-dupe:
   max-items: 64
 
 
-#  1.15 autocraft dupe
+#  1.15 donkey dupe
 donkey-dupe:
 
   # is this dupe enabled?
