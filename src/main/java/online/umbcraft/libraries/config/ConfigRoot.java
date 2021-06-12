@@ -6,7 +6,7 @@ public enum ConfigRoot {
     AUTOCRAFT("autocraft-dupe"),
 
     //  1.15 donkey dupe root path
-    DONKEY("autocraft-dupe"),
+    DONKEY("donkey-dupe"),
 
     //  item limits root path
     NON_STACK("non-stackables"),
