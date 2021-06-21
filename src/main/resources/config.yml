@@ -30,7 +30,7 @@ donkey-dupe:
   enabled: true
 
   # do donkeys in boats get duped when a player dc's riding the boat / donkey?
-  do-boats: true
+  boats: true
 
 
 # 1.8 nether portal minecart dupe

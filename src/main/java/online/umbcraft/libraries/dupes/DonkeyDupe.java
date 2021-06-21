@@ -32,7 +32,7 @@ public class DonkeyDupe implements Listener {
 
         final Entity vehicle = e.getPlayer().getVehicle();
 
-        if (plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.name()))
+        if (plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.path()))
             traverseBoat(vehicle);
         else
             dupeInventory(vehicle);
@@ -85,18 +85,17 @@ public class DonkeyDupe implements Listener {
             ItemStack item = toClone.getItem(i);
             if (
                     item.getMaxStackSize() == 1 &&
-                            item.getType() != Material.TOTEM_OF_UNDYING &&
-                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.name())
+                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
             ) break;
 
             if (
                     item.getType().name().contains("SHULKER_BOX") &&
-                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.name())
+                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
             ) break;
 
             if (
                     item.getType() == Material.TOTEM_OF_UNDYING &&
-                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.name())
+                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
             ) break;
 
             result.setItem(i, toClone.getItem(i));
