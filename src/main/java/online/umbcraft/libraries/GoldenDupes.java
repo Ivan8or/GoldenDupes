@@ -35,7 +35,7 @@ public final class GoldenDupes extends JavaPlugin {
         }
 
         // starts nether portal minecart dupe handler if the dupe is enabled
-        if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
+        if (getConfig().getBoolean(ConfigPath.NETHER_DO.path())) {
             getServer().getPluginManager().registerEvents(
                     new NetherPortalDupe(this), this);
         }

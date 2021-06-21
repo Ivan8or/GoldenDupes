@@ -3,14 +3,18 @@ package online.umbcraft.libraries.dupes;
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+
+import static online.umbcraft.libraries.config.ConfigPath.*;
 
 
 public class DonkeyDupe implements Listener {
@@ -28,7 +32,7 @@ public class DonkeyDupe implements Listener {
 
         final Entity vehicle = e.getPlayer().getVehicle();
 
-        if(plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.name()))
+        if (plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.name()))
             traverseBoat(vehicle);
         else
             dupeInventory(vehicle);
@@ -78,6 +82,23 @@ public class DonkeyDupe implements Listener {
         final Inventory result = Bukkit.createInventory(null, toClone.getType());
 
         for (int i = 0; i <= 16; i++) {
+            ItemStack item = toClone.getItem(i);
+            if (
+                    item.getMaxStackSize() == 1 &&
+                            item.getType() != Material.TOTEM_OF_UNDYING &&
+                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.name())
+            ) break;
+
+            if (
+                    item.getType().name().contains("SHULKER_BOX") &&
+                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.name())
+            ) break;
+
+            if (
+                    item.getType() == Material.TOTEM_OF_UNDYING &&
+                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.name())
+            ) break;
+
             result.setItem(i, toClone.getItem(i));
         }
         return result;

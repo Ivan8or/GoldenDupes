@@ -27,6 +27,12 @@ public enum ConfigPath {
 
 
 
+    //      is the nether portal dupe enabled
+    NETHER_DO(ConfigRoot.NETHER_PORTAL, "enabled", "true"),
+
+    //      how many ticks of freedom should be given before the items are no longer dupeable
+    NETHER_TICKDELAY(ConfigRoot.NETHER_PORTAL, "tick-delay", "3"),
+
 
     //      should shulker boxes be duped at all?
     NON_STACK_DO_DUPE(ConfigRoot.NON_STACK, "dupe", "true"),

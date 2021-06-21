@@ -33,6 +33,14 @@ donkey-dupe:
   do-boats: true
 
 
+# 1.8 nether portal minecart dupe
+nether-portal:
+
+  enabled: true
+
+  tick-delay: 3
+
+
 ########################
 # GLOBAL ITEM SETTINGS #
 ########################

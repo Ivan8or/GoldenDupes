@@ -1,29 +1,32 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
-import org.bukkit.Bukkit;
+import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Material;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+import static online.umbcraft.libraries.config.ConfigPath.*;
+
 public class NetherPortalDupe implements Listener {
 
     final private GoldenDupes plugin;
     final private Map<UUID,List<DupedItem>> dupedItems;
-    final private int tickSpace = 50;
+    final private int tickSpace;
 
     public NetherPortalDupe(final GoldenDupes plugin) {
         this.plugin = plugin;
         dupedItems = new HashMap<>();
+
+        tickSpace = plugin.getConfig().getInt(ConfigPath.NETHER_TICKDELAY.name());
     }
 
 
@@ -33,17 +36,35 @@ public class NetherPortalDupe implements Listener {
         if(!(e.getEntity() instanceof StorageMinecart))
             return;
 
-        Bukkit.broadcastMessage("minecart went through portal");
         StorageMinecart cart = (StorageMinecart) e.getEntity();
-        cart.teleport(cart.getLocation().add(4,0,0));
+        cart.teleport(cart.getLocation().add(1,0,0));
         List<DupedItem> items = dupedItems.get(cart.getUniqueId());
 
         if(items == null)
             return;
 
         for(DupedItem i: items) {
-            Bukkit.broadcastMessage("cloning "+i.getItem().getType()+" back to cart!");
-            cart.getInventory().setItem(i.getSlot(), i.getItem());
+
+            ItemStack item = i.getItem();
+
+            if (
+                    item.getMaxStackSize() == 1 &&
+                            item.getType() != Material.TOTEM_OF_UNDYING &&
+                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.name())
+            ) break;
+
+            if (
+                    item.getType().name().contains("SHULKER_BOX") &&
+                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.name())
+            ) break;
+
+            if (
+                    item.getType() == Material.TOTEM_OF_UNDYING &&
+                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.name())
+            ) break;
+
+
+            cart.getInventory().setItem(i.getSlot(), item);
         }
         items.clear();
 
@@ -75,7 +96,6 @@ public class NetherPortalDupe implements Listener {
     private void trackDupedItem(final ItemStack item, final int slot, final UUID uuid, final int ticks) {
 
         if(item.getType() == Material.AIR) {
-            Bukkit.broadcastMessage("material is AIR >:(");
             return;
         }
 
@@ -86,11 +106,9 @@ public class NetherPortalDupe implements Listener {
 
         final List<DupedItem> cartItems = dupedItems.get(uuid);
         cartItems.add(cloned);
-        Bukkit.broadcastMessage("minecart item is ready to be duped");
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
                 () -> {
                     cartItems.remove(cloned);
-                    Bukkit.broadcastMessage("minecart item is no longer dupeable");
                     if(cartItems.isEmpty())
                         dupedItems.remove(uuid);
 
