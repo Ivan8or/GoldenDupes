@@ -4,6 +4,7 @@ import online.umbcraft.libraries.config.ConfigAutofill;
 import online.umbcraft.libraries.config.ConfigPath;
 import online.umbcraft.libraries.dupes.AutocraftDupe;
 import online.umbcraft.libraries.dupes.DonkeyDupe;
+import online.umbcraft.libraries.dupes.NetherPortalDupe;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +34,11 @@ public final class GoldenDupes extends JavaPlugin {
                     new DonkeyDupe(this), this);
         }
 
+        // starts nether portal minecart dupe handler if the dupe is enabled
+        if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
+            getServer().getPluginManager().registerEvents(
+                    new NetherPortalDupe(this), this);
+        }
     }
 
     public void onDisable() {
