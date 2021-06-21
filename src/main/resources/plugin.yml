@@ -1,6 +1,6 @@
 name: GoldenDupes
 main: online.umbcraft.libraries.GoldenDupes
-version: 1.2.11
+version: @version@
 api-version: 1.15
 author: Ivan8or
 description: Dupes from the golden days of minecraft!
