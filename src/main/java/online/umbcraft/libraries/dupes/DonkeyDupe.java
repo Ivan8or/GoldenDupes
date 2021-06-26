@@ -32,6 +32,9 @@ public class DonkeyDupe implements Listener {
 
         final Entity vehicle = e.getPlayer().getVehicle();
 
+        if(vehicle == null)
+            return;
+
         if (plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.path()))
             traverseBoat(vehicle);
         else
