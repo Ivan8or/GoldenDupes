@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -68,7 +69,11 @@ public class NetherPortalDupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onUseMinecartChest(final InventoryClickEvent e) {
 
-        final InventoryHolder holder = e.getClickedInventory().getHolder();
+        final Inventory inv = e.getClickedInventory();
+        if(inv == null)
+            return;
+
+        final InventoryHolder holder = inv.getHolder();
         if(!(holder instanceof StorageMinecart))
             return;
 
