@@ -89,7 +89,7 @@ public class DonkeyDupe implements Listener {
 
             if (
                     item == null
-            ) break;
+            ) continue;
 
             if (
                     item.getMaxStackSize() == 1 &&
