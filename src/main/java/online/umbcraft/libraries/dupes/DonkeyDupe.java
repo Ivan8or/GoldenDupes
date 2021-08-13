@@ -86,6 +86,11 @@ public class DonkeyDupe implements Listener {
 
         for (int i = 0; i <= 16; i++) {
             ItemStack item = toClone.getItem(i);
+
+            if (
+                    item == null
+            ) continue;
+
             if (
                     item.getMaxStackSize() == 1 &&
                             !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
