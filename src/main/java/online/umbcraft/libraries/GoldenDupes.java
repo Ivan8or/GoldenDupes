@@ -20,20 +20,30 @@ public final class GoldenDupes extends JavaPlugin {
 
         //bStats metrics
         Metrics metrics = new Metrics(this, 11145);
-        metrics.addCustomChart(new SimpleBarChart("Server Sizes",
+
+        metrics.addCustomChart(new SimpleBarChart("Server Size",
                 () -> {
                     Map<String, Integer> map = new HashMap<>();
                     int playercount = getServer().getOnlinePlayers().size();
 
-                    int[] cats = {0,0,5,10,20,50,75,100};
-                    for(int i = 1; i < cats.length; i++) {
-                        if(playercount <= cats[i]) {
-                            map.put((cats[i - 1] + 1) + "-" + (cats[i]), 1);
-                            return map;
+                    int[] cats = {0, 0, 5, 10, 20, 50, 75, 100};
+                    int index = -1;
+                    for (int i = 1; i < cats.length; i++) {
+                        String barName = (cats[i - 1] + 1) + "-" + (cats[i]);
+                        if (playercount > cats[i-1] && playercount <= cats[i]) {
+                            map.put(barName, 1);
+                            index = i;
                         }
+                        else
+                            map.put(barName, 0);
                     }
-                    map.put("101+", 1);
+
+                    if(index == -1)
+                        map.put((cats[cats.length - 1] + 1) + "+", 1);
+                    else
+                        map.put((cats[cats.length - 1] + 1) + "+", 0);
                     return map;
+
                 }));
 
         // fixing up config if it doesn't have some particular settings
