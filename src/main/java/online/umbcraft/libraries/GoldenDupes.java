@@ -22,6 +22,7 @@ public final class GoldenDupes extends JavaPlugin {
         Metrics metrics = new Metrics(this, 11145);
 
         metrics.addCustomChart(new SimpleBarChart("Server Size",
+
                 () -> {
                     Map<String, Integer> map = new HashMap<>();
                     int playercount = getServer().getOnlinePlayers().size();
@@ -38,10 +39,8 @@ public final class GoldenDupes extends JavaPlugin {
                             map.put(barName, 0);
                     }
 
-                    if(index == -1)
-                        map.put((cats[cats.length - 1] + 1) + "+", 1);
-                    else
-                        map.put((cats[cats.length - 1] + 1) + "+", 0);
+                    String catchAllCat = (cats[cats.length - 1] + 1) + "+";
+                    map.put(catchAllCat, (index == -1) ? 1 : 0);
                     return map;
 
                 }));
