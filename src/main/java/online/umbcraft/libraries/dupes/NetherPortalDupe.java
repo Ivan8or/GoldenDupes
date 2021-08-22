@@ -21,6 +21,8 @@ import static online.umbcraft.libraries.config.ConfigPath.*;
 public class NetherPortalDupe implements Listener {
 
     final private GoldenDupes plugin;
+
+    // collection of all items removed by players from minecarts in the recent past
     final private Map<UUID,List<DupedItem>> dupedItems;
 
     public NetherPortalDupe(final GoldenDupes plugin) {
@@ -79,12 +81,12 @@ public class NetherPortalDupe implements Listener {
 
         final UUID cartUUID = ((StorageMinecart) holder).getUniqueId();
 
-
         final int slot = e.getSlot();
         final int tickSpace = plugin.getConfig().getInt(ConfigPath.NETHER_TICKDELAY.path());
         switch(e.getAction()) {
             case MOVE_TO_OTHER_INVENTORY:
                 trackDupedItem(e.getCurrentItem(), slot, cartUUID, tickSpace);
+                break;
             case COLLECT_TO_CURSOR:
             case PICKUP_ALL:
             case PICKUP_HALF:

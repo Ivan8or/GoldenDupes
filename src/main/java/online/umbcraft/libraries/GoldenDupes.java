@@ -30,7 +30,7 @@ public final class GoldenDupes extends JavaPlugin {
                     int[] cats = {0, 0, 5, 10, 20, 50, 75, 100};
                     int index = -1;
                     for (int i = 1; i < cats.length; i++) {
-                        String barName = (cats[i - 1] + 1) + "-" + (cats[i]);
+                        String barName = (cats[i-1] + 1) + "-" + (cats[i]);
                         if (playercount > cats[i-1] && playercount <= cats[i]) {
                             map.put(barName, 1);
                             index = i;
