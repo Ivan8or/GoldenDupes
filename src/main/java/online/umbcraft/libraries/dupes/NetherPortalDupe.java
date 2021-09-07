@@ -4,6 +4,7 @@ import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
@@ -25,19 +27,42 @@ public class NetherPortalDupe implements Listener {
     // collection of all items removed by players from minecarts in the recent past
     final private Map<UUID,List<DupedItem>> dupedItems;
 
+    // tracks all minecarts that have recently been transported through a portal
+    final private Map<UUID, Integer> transported;
+
     public NetherPortalDupe(final GoldenDupes plugin) {
         this.plugin = plugin;
+
+        transported = new HashMap<>();
         dupedItems = new HashMap<>();
     }
 
+
+    public void delayCartReuse(UUID minecart) {
+        if(transported.containsKey(minecart))
+            plugin.getServer().getScheduler().cancelTask(transported.get(minecart));
+
+        int newID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            transported.remove(minecart);
+        }, 20L);
+
+        transported.put(minecart, newID);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onMinecartThroughPortal(final EntityPortalEnterEvent e) {
 
         if(!(e.getEntity() instanceof StorageMinecart))
             return;
+
         StorageMinecart cart = (StorageMinecart) e.getEntity();
-        cart.teleport(cart.getLocation().add(1,0,0));
+
+        UUID cartID = cart.getUniqueId();
+        if(transported.containsKey(cartID))
+            return;
+
+        delayCartReuse(cartID);
+
         List<DupedItem> items = dupedItems.get(cart.getUniqueId());
 
         if(items == null)
@@ -116,7 +141,6 @@ public class NetherPortalDupe implements Listener {
                         dupedItems.remove(uuid);
                 }, ticks);
     }
-
 
     private class DupedItem {
         final private ItemStack item;
