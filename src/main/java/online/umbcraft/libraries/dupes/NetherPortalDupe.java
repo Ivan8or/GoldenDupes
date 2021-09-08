@@ -16,7 +16,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
@@ -37,7 +36,6 @@ public class NetherPortalDupe implements Listener {
         dupedItems = new HashMap<>();
     }
 
-
     public void delayCartReuse(UUID minecart) {
         if(transported.containsKey(minecart))
             plugin.getServer().getScheduler().cancelTask(transported.get(minecart));
@@ -56,11 +54,12 @@ public class NetherPortalDupe implements Listener {
             return;
 
         StorageMinecart cart = (StorageMinecart) e.getEntity();
-
         UUID cartID = cart.getUniqueId();
-        if(transported.containsKey(cartID))
-            return;
 
+        if(transported.containsKey(cartID)) {
+            delayCartReuse(cartID);
+            return;
+        }
         delayCartReuse(cartID);
 
         List<DupedItem> items = dupedItems.get(cart.getUniqueId());
@@ -69,28 +68,27 @@ public class NetherPortalDupe implements Listener {
             return;
 
         for(DupedItem i: items) {
-
             ItemStack item = i.getItem();
 
             if (
                     item.getMaxStackSize() == 1 &&
                             !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
-            ) break;
+            ) continue;
 
             if (
                     item.getType().name().contains("SHULKER_BOX") &&
                             !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
-            ) break;
+            ) continue;
 
             if (
                     item.getType() == Material.TOTEM_OF_UNDYING &&
                             !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
-            ) break;
+            ) continue;
 
             cart.getInventory().setItem(i.getSlot(), item);
         }
         items.clear();
-
+        dupedItems.remove(cartID);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

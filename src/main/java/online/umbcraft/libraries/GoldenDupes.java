@@ -37,12 +37,10 @@ public final class GoldenDupes extends JavaPlugin {
                     for(int i = 0; i < categories.length; i++)
                         if(playercount <= limits[i]) {
                             map.put(categories[i], 1);
-                            System.out.println("getting bStats metric for server size bar - returning "+categories[i]);
                             return map;
                         }
 
                     map.put(categories[categories.length-1],1);
-                    System.out.println("getting bStats metric for server size bar - returning 100+");
                     return map;
                 }));
 
@@ -56,7 +54,6 @@ public final class GoldenDupes extends JavaPlugin {
 
                     for(int i = 0; i < categories.length; i++)
                         if(playercount <= limits[i]) {
-                            System.out.println("getting bStats metric for server size pie - returning "+categories[i]);
                             return categories[i];
                         }
                     return categories[categories.length-1];
