@@ -19,10 +19,14 @@ public class ConfigAutofill {
         FileConfiguration config = plugin.getConfig();
         int updates = 0;
         for(ConfigPath setting: ConfigPath.values()) {
+            System.out.println("checking setting - "+setting.path());
             if(!config.contains(setting.path())) {
+                System.out.println("\tdoesn't exist: ADDING!");
                 updates++;
                 config.set(setting.path(), setting.value());
             }
+            else
+                System.out.println("\texists");
         }
         if(updates > 0)
             plugin.saveConfig();

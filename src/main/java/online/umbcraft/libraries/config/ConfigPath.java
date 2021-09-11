@@ -34,6 +34,13 @@ public enum ConfigPath {
     NETHER_TICKDELAY(ConfigRoot.NETHER_PORTAL, "tick-delay", "3"),
 
 
+
+    //      is the donkey dupe enabled?
+    ANVIL_DO(ConfigRoot.ANVIL, "enabled", "true"),
+
+
+
+
     //      should shulker boxes be duped at all?
     NON_STACK_DO_DUPE(ConfigRoot.NON_STACK, "dupe", "true"),
 
@@ -42,13 +49,11 @@ public enum ConfigPath {
 
 
 
-
     //      stack size for duped shulkers
     SHULKERS_DO_DUPE(ConfigRoot.SHULKERS, "dupe", "true"),
 
     //      stack size for duped totems
     SHULKERS_STACKSIZE(ConfigRoot.SHULKERS, "stack-to", "1"),
-
 
 
 

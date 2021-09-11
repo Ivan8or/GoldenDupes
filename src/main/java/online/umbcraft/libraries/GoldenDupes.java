@@ -2,6 +2,7 @@ package online.umbcraft.libraries;
 
 import online.umbcraft.libraries.config.ConfigAutofill;
 import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.dupes.AnvilDupe;
 import online.umbcraft.libraries.dupes.AutocraftDupe;
 import online.umbcraft.libraries.dupes.DonkeyDupe;
 import online.umbcraft.libraries.dupes.NetherPortalDupe;
@@ -80,6 +81,9 @@ public final class GoldenDupes extends JavaPlugin {
             getServer().getPluginManager().registerEvents(
                     new NetherPortalDupe(this), this);
         }
+
+        getServer().getPluginManager().registerEvents(
+                new AnvilDupe(this), this);
     }
 
 }
