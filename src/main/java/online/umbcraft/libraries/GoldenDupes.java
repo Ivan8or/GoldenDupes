@@ -82,8 +82,10 @@ public final class GoldenDupes extends JavaPlugin {
                     new NetherPortalDupe(this), this);
         }
 
+        if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
         getServer().getPluginManager().registerEvents(
                 new AnvilDupe(this), this);
+        }
     }
 
 }
