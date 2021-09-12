@@ -1,44 +1,30 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
-import online.umbcraft.libraries.config.ConfigPath;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class AnvilDupe implements Listener {
+import static online.umbcraft.libraries.config.ConfigPath.*;
 
-    // super speedy set of all shulker items
-    final private EnumSet<Material> shulkerBoxes;
+public class AnvilDupe implements Listener {
 
     final private GoldenDupes plugin;
 
     public AnvilDupe(final GoldenDupes plugin) {
         this.plugin = plugin;
-
-        // building an EnumSet of all shulkers
-        shulkerBoxes = EnumSet.noneOf(Material.class);
-        Arrays.stream(Material.values())
-                .filter(m -> m.toString().endsWith("SHULKER_BOX"))
-                .forEach(shulkerBoxes::add);
     }
 
-    // gives the player the extra items once they pick up after performing the dupe
+    // gives the player an extra item stack after their anvil breaks w/ a full inventory
     @EventHandler(priority = EventPriority.HIGH)
     public void onAnvilUse(final InventoryClickEvent e) {
         Inventory t = e.getClickedInventory();
@@ -61,11 +47,28 @@ public class AnvilDupe implements Listener {
         // check if anvil was destroyed by next tick
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () ->
         {
+
             if (l.getBlock().getType() == Material.AIR) {
+
+                if (
+                        toDupe.getMaxStackSize() == 1 &&
+                                !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
+                ) return;
+
+                if (
+                        toDupe.getType().name().contains("SHULKER_BOX") &&
+                                !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
+                ) return;
+
+                if (
+                        toDupe.getType() == Material.TOTEM_OF_UNDYING &&
+                                !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
+                ) return;
+
                 Item dropped = p.getWorld().dropItem(p.getLocation(),toDupe.clone());
                 dropped.setVelocity(p.getEyeLocation().getDirection());
             }
-        }, 1L);
 
+        }, 1L);
     }
 }
