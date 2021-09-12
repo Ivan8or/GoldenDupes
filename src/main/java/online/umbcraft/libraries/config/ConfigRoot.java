@@ -11,6 +11,10 @@ public enum ConfigRoot {
     // 1.8 nether portal dupe root path
     NETHER_PORTAL("nether-portal"),
 
+    // 1.17 anvil dupe root path
+    ANVIL("anvil-dupe"),
+
+
     //  item limits root path
     NON_STACK("non-stackables"),
 

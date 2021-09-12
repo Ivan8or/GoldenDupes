@@ -1,6 +1,8 @@
-# GoldenDupes Dupe Plugin #
-#    by Ivan Volkov
-#    @Ivan8or#7412 on discord
+##################################
+#    GoldenDupes Dupe Plugin     #
+#    by Ivan Volkov (Ivan8or)    #
+#    @Ivan8or#7412 on discord    #
+##################################
 
 #  1.12.2 autocraft dupe
 autocraft-dupe:
@@ -36,9 +38,18 @@ donkey-dupe:
 # 1.8 nether portal minecart dupe
 nether-portal:
 
+  # is this dupe enabled?
   enabled: true
 
+  # how long should the minecart wait before it doesn't dupe items removed from it
   tick-delay: 3
+
+
+# 1.17 anvil dupe
+anvil-dupe:
+
+  # is this dupe enabled?
+  enabled: true
 
 
 ########################
@@ -52,7 +63,7 @@ non-stackables:
 # what is the max duped stack size?
   stack-to: 64
 
-# shulker boxes of any color
+# shulker boxes (of all colors)
 shulkers:
 # can they be duped?
   dupe: true

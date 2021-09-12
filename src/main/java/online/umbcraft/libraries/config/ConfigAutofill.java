@@ -18,13 +18,17 @@ public class ConfigAutofill {
 
         FileConfiguration config = plugin.getConfig();
         int updates = 0;
+
         for(ConfigPath setting: ConfigPath.values()) {
-            if(!config.contains(setting.path())) {
+
+            if(!config.contains(setting.path(), true)) {
                 updates++;
                 config.set(setting.path(), setting.value());
             }
         }
-        if(updates > 0)
+        if(updates > 0) {
+            plugin.getConfig().options().copyDefaults(true);
             plugin.saveConfig();
+        }
     }
 }
