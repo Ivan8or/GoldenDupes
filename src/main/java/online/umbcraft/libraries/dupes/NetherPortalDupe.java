@@ -48,6 +48,10 @@ public class NetherPortalDupe implements Listener {
         dupedItems = new HashMap<>();
     }
 
+    public DupeScheduler getScheduler() {
+        return portalScheduler;
+    }
+
     public void delayCartReuse(UUID minecart) {
         if(transported.containsKey(minecart))
             plugin.getServer().getScheduler().cancelTask(transported.get(minecart));

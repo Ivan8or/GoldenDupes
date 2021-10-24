@@ -18,6 +18,23 @@ import java.util.Map;
 
 public final class GoldenDupes extends JavaPlugin {
 
+    private AnvilDupe anvilDupe;
+    private AutocraftDupe autocraftDupe;
+    private DonkeyDupe donkeyDupe;
+    private NetherPortalDupe netherPortalDupe;
+
+    public AnvilDupe getAnvilDupe() {
+        return anvilDupe;
+    }
+    public AutocraftDupe getAutocraftDupe() {
+        return autocraftDupe;
+    }
+    public DonkeyDupe getDonkeyDupe() {
+        return donkeyDupe;
+    }
+    public NetherPortalDupe getNetherPortalDupe() {
+        return netherPortalDupe;
+    }
 
     public void onEnable() {
 
@@ -62,6 +79,12 @@ public final class GoldenDupes extends JavaPlugin {
                 }));
 
 
+        // papi integration
+        if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new DupePlaceholder(this).register();
+        }
+
+
         // fixing up config if it doesn't have some particular settings
         ConfigAutofill.autofill(this);
 
@@ -69,25 +92,29 @@ public final class GoldenDupes extends JavaPlugin {
 
             // starts autocraft dupe handler if the dupe is enabled
             if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
+                autocraftDupe = new AutocraftDupe(this);
                 getServer().getPluginManager().registerEvents(
-                        new AutocraftDupe(this), this);
+                        autocraftDupe, this);
             }
 
             // starts autocraft dupe handler if the dupe is enabled
             if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
+                donkeyDupe = new DonkeyDupe(this);
                 getServer().getPluginManager().registerEvents(
-                        new DonkeyDupe(this), this);
+                        donkeyDupe, this);
             }
 
             // starts nether portal minecart dupe handler if the dupe is enabled
             if (getConfig().getBoolean(ConfigPath.NETHER_DO.path())) {
+                netherPortalDupe = new NetherPortalDupe(this);
                 getServer().getPluginManager().registerEvents(
-                        new NetherPortalDupe(this), this);
+                        netherPortalDupe, this);
             }
 
             if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
+                anvilDupe = new AnvilDupe(this);
                 getServer().getPluginManager().registerEvents(
-                        new AnvilDupe(this), this);
+                        anvilDupe, this);
             }
 
         }catch(IOException e) {

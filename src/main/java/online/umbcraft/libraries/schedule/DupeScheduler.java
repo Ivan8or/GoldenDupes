@@ -50,14 +50,14 @@ public class DupeScheduler {
         timeFolder.mkdirs();
 
         timeFile = new File(timeFolder.getAbsolutePath(), dupeName + ".dupe");
-        timeFile.createNewFile();
-
-        StateStamp oldStamp = getSavedTimestamp();
 
         if(on <= 0 || off <= 0) {
             enabled = true;
             return;
         }
+
+        timeFile.createNewFile();
+        StateStamp oldStamp = getSavedTimestamp();
 
         initializeState(oldStamp.getTime(), oldStamp.getStatus());
     }
@@ -71,8 +71,8 @@ public class DupeScheduler {
         StateStamp toReturn;
 
         if (!sc.hasNextLine()) {
-            toReturn = new StateStamp();
-            toReturn.record();
+            toReturn = new StateStamp(enabled);
+            toReturn.record(timeFile);
         } else {
             String stampString = sc.nextLine();
             toReturn = new StateStamp(stampString);
@@ -108,42 +108,5 @@ public class DupeScheduler {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             flipState();
         }, delay/50);
-    }
-
-
-    private class StateStamp {
-
-        final private long time;
-        final private boolean status;
-
-        public StateStamp() {
-            time = System.currentTimeMillis();
-            status = enabled;
-        }
-
-        public StateStamp(long time, boolean status) {
-            this.time = time;
-            this.status = status;
-        }
-
-        public StateStamp(String stamp) {
-            String[] stampComponents = stamp.split("@");
-            time = Long.parseLong(stampComponents[1]);
-            status = stampComponents[0].equals("on");
-        }
-
-        public void record() throws IOException {
-            FileWriter fw = new FileWriter(timeFile);
-            fw.write(((status) ? "on" : "off") + "@" + time);
-            fw.close();
-        }
-
-        public long getTime() {
-            return time;
-        }
-
-        public boolean getStatus() {
-            return status;
-        }
     }
 }

@@ -38,6 +38,9 @@ public class DonkeyDupe implements Listener {
 
     }
 
+    public DupeScheduler getScheduler() {
+        return donkeyScheduler;
+    }
 
     // detects for players viewing the donkey's inventory whenever a player dc's riding a donkey
     @EventHandler(priority = EventPriority.HIGH)

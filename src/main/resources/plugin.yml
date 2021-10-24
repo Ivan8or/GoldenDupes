@@ -1,5 +1,6 @@
 name: GoldenDupes
 main: online.umbcraft.libraries.GoldenDupes
+softdepend: [PlaceholderAPI]
 version: @version@
 api-version: 1.15
 author: Ivan8or

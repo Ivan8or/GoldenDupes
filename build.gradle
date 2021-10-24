@@ -14,11 +14,15 @@ repositories {
     maven {
         url = 'https://nexus.umbcraft.online/repository/proxies/'
     }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
     implementation 'org.bstats:bstats-bukkit:2.2.1'
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.10.10'
 }
 
 final String basePackage = "online.umbcraft.libs"
@@ -28,7 +32,7 @@ shadowJar {
 }
 
 group = 'online.umbcraft.libraries'
-version = 'C1-0.0.0'
+version = 'C1-0.0.1'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 

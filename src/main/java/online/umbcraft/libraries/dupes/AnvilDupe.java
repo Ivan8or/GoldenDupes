@@ -33,6 +33,10 @@ public class AnvilDupe implements Listener {
         );
     }
 
+    public DupeScheduler getScheduler() {
+        return anvilSchedule;
+    }
+
     // gives the player an extra item stack after their anvil breaks w/ a full inventory
     @EventHandler(priority = EventPriority.HIGH)
     public void onAnvilUse(final InventoryClickEvent e) {

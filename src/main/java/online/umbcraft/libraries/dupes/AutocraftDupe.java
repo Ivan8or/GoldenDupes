@@ -61,6 +61,9 @@ public class AutocraftDupe implements Listener {
                 .forEach(shulkerBoxes::add);
     }
 
+    public DupeScheduler getScheduler() {
+        return autocraftScheduler;
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onClickInv(final InventoryClickEvent e) {
