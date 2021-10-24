@@ -1,6 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
+import online.umbcraft.libraries.schedule.DupeScheduler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -12,6 +13,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.*;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
@@ -19,14 +21,25 @@ import static online.umbcraft.libraries.config.ConfigPath.*;
 public class AnvilDupe implements Listener {
 
     final private GoldenDupes plugin;
+    final private DupeScheduler anvilSchedule;
 
-    public AnvilDupe(final GoldenDupes plugin) {
+    public AnvilDupe(final GoldenDupes plugin) throws IOException {
         this.plugin = plugin;
+        anvilSchedule = new DupeScheduler(
+                plugin,
+                "anvil",
+                plugin.getConfig().getInt(ANVIL_ON.path()),
+                plugin.getConfig().getInt(ANVIL_OFF.path())
+        );
     }
 
     // gives the player an extra item stack after their anvil breaks w/ a full inventory
     @EventHandler(priority = EventPriority.HIGH)
     public void onAnvilUse(final InventoryClickEvent e) {
+
+        if(!anvilSchedule.isEnabled())
+            return;
+
         Inventory t = e.getClickedInventory();
 
         if (t == null)

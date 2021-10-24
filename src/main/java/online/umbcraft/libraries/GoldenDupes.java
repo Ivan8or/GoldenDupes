@@ -11,6 +11,7 @@ import org.bstats.charts.SimpleBarChart;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,27 +65,33 @@ public final class GoldenDupes extends JavaPlugin {
         // fixing up config if it doesn't have some particular settings
         ConfigAutofill.autofill(this);
 
-        // starts autocraft dupe handler if the dupe is enabled
-        if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
-            getServer().getPluginManager().registerEvents(
-                    new AutocraftDupe(this), this);
-        }
+        try {
 
-        // starts autocraft dupe handler if the dupe is enabled
-        if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
-            getServer().getPluginManager().registerEvents(
-                    new DonkeyDupe(this), this);
-        }
+            // starts autocraft dupe handler if the dupe is enabled
+            if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
+                getServer().getPluginManager().registerEvents(
+                        new AutocraftDupe(this), this);
+            }
 
-        // starts nether portal minecart dupe handler if the dupe is enabled
-        if (getConfig().getBoolean(ConfigPath.NETHER_DO.path())) {
-            getServer().getPluginManager().registerEvents(
-                    new NetherPortalDupe(this), this);
-        }
+            // starts autocraft dupe handler if the dupe is enabled
+            if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
+                getServer().getPluginManager().registerEvents(
+                        new DonkeyDupe(this), this);
+            }
 
-        if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
-        getServer().getPluginManager().registerEvents(
-                new AnvilDupe(this), this);
+            // starts nether portal minecart dupe handler if the dupe is enabled
+            if (getConfig().getBoolean(ConfigPath.NETHER_DO.path())) {
+                getServer().getPluginManager().registerEvents(
+                        new NetherPortalDupe(this), this);
+            }
+
+            if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
+                getServer().getPluginManager().registerEvents(
+                        new AnvilDupe(this), this);
+            }
+
+        }catch(IOException e) {
+            e.printStackTrace();
         }
     }
 

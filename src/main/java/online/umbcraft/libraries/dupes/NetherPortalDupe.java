@@ -2,6 +2,7 @@ package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.schedule.DupeScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Minecart;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.*;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
@@ -29,8 +31,18 @@ public class NetherPortalDupe implements Listener {
     // tracks all minecarts that have recently been transported through a portal
     final private Map<UUID, Integer> transported;
 
-    public NetherPortalDupe(final GoldenDupes plugin) {
+    final private DupeScheduler portalScheduler;
+
+    public NetherPortalDupe(final GoldenDupes plugin) throws IOException {
         this.plugin = plugin;
+
+        portalScheduler = new DupeScheduler(
+                plugin,
+                "portal",
+                plugin.getConfig().getInt(AUTOCRAFT_ON.path()),
+                plugin.getConfig().getInt(AUTOCRAFT_OFF.path())
+        );
+
 
         transported = new HashMap<>();
         dupedItems = new HashMap<>();
@@ -49,6 +61,9 @@ public class NetherPortalDupe implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onMinecartThroughPortal(final EntityPortalEnterEvent e) {
+
+        if(!portalScheduler.isEnabled())
+            return;
 
         if(!(e.getEntity() instanceof StorageMinecart))
             return;
@@ -93,6 +108,9 @@ public class NetherPortalDupe implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onUseMinecartChest(final InventoryClickEvent e) {
+
+        if(!portalScheduler.isEnabled())
+            return;
 
         final Inventory inv = e.getClickedInventory();
         if(inv == null)

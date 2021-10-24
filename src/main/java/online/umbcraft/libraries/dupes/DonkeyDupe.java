@@ -2,6 +2,7 @@ package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.schedule.DupeScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.List;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
@@ -21,14 +23,28 @@ public class DonkeyDupe implements Listener {
 
     final private GoldenDupes plugin;
 
-    public DonkeyDupe(final GoldenDupes plugin) {
+    final private DupeScheduler donkeyScheduler;
+
+
+    public DonkeyDupe(final GoldenDupes plugin) throws IOException {
         this.plugin = plugin;
+
+        donkeyScheduler = new DupeScheduler(
+                plugin,
+                "donkey",
+                plugin.getConfig().getInt(AUTOCRAFT_ON.path()),
+                plugin.getConfig().getInt(AUTOCRAFT_OFF.path())
+        );
+
     }
 
 
     // detects for players viewing the donkey's inventory whenever a player dc's riding a donkey
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLeave(final PlayerQuitEvent e) {
+
+        if(!donkeyScheduler.isEnabled())
+            return;
 
         final Entity vehicle = e.getPlayer().getVehicle();
 

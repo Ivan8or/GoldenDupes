@@ -2,6 +2,7 @@ package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.schedule.DupeScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +19,10 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.*;
+
+import static online.umbcraft.libraries.config.ConfigPath.*;
 
 public class AutocraftDupe implements Listener {
 
@@ -36,10 +40,20 @@ public class AutocraftDupe implements Listener {
 
     final private GoldenDupes plugin;
 
+    final private DupeScheduler autocraftScheduler;
 
-    public AutocraftDupe(final GoldenDupes plugin) {
+
+    public AutocraftDupe(final GoldenDupes plugin) throws IOException {
         this.plugin = plugin;
-        
+
+        autocraftScheduler = new DupeScheduler(
+                plugin,
+                "autocraft",
+                plugin.getConfig().getInt(AUTOCRAFT_ON.path()),
+                plugin.getConfig().getInt(AUTOCRAFT_OFF.path())
+        );
+
+
         // building an EnumSet of all shulkers
         shulkerBoxes = EnumSet.noneOf(Material.class);
         Arrays.stream(Material.values())
@@ -50,11 +64,18 @@ public class AutocraftDupe implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onClickInv(final InventoryClickEvent e) {
+
+        if(!autocraftScheduler.isEnabled())
+            return;
+
         denyDupeClick(e.getWhoClicked().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onDragInv(final InventoryDragEvent e) {
+
+        if(!autocraftScheduler.isEnabled())
+            return;
 
         denyDupeClick(e.getWhoClicked().getUniqueId());
     }
@@ -72,6 +93,9 @@ public class AutocraftDupe implements Listener {
     // increments the amount of duped items a player will receive, and checks to make sure they used the autocomplete
     @EventHandler(priority = EventPriority.HIGH)
     public void onCraftItem(final PrepareItemCraftEvent e) {
+
+        if(!autocraftScheduler.isEnabled())
+            return;
 
         final UUID playerUUID = e.getView().getPlayer().getUniqueId();
 
@@ -116,6 +140,7 @@ public class AutocraftDupe implements Listener {
     // player extra item count resets if they leave the menu
     @EventHandler(priority = EventPriority.HIGH)
     public void onCloseInv(final InventoryCloseEvent e) {
+
         dupeAmnt.remove(e.getPlayer().getUniqueId());
         cancelDupeClearTask(e.getPlayer().getUniqueId());
     }
@@ -123,12 +148,14 @@ public class AutocraftDupe implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKick(final PlayerKickEvent e) {
+
         dupeAmnt.remove(e.getPlayer().getUniqueId());
         dupeTask.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLeave(final PlayerQuitEvent e) {
+
         dupeAmnt.remove(e.getPlayer().getUniqueId());
         dupeTask.remove(e.getPlayer().getUniqueId());
     }
@@ -137,6 +164,9 @@ public class AutocraftDupe implements Listener {
     // gives the player the extra items once they pick up after performing the dupe
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemPickup(final EntityPickupItemEvent e) {
+
+        if(!autocraftScheduler.isEnabled())
+            return;
 
         // players who didn't do the dupe / other entities are not affected
         if (!dupeAmnt.containsKey(e.getEntity().getUniqueId())) {

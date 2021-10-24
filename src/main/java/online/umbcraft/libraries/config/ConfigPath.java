@@ -5,6 +5,10 @@ public enum ConfigPath {
     //      is the autocraft dupe enabled?
     AUTOCRAFT_DO(ConfigRoot.AUTOCRAFT, "enabled", "true"),
 
+    //      time the dupe spends enabled vs disabled
+    AUTOCRAFT_ON(ConfigRoot.AUTOCRAFT, "time-on", "-1"),
+    AUTOCRAFT_OFF(ConfigRoot.AUTOCRAFT, "time-off", "-1"),
+
     //      should the autocraft dupe act as vanilla as possible
     AUTOCRAFT_VANILLA(ConfigRoot.AUTOCRAFT, "vanilla", "true"),
 
@@ -22,6 +26,10 @@ public enum ConfigPath {
     //      is the donkey dupe enabled?
     DONKEY_DO(ConfigRoot.DONKEY, "enabled", "true"),
 
+    //      time the dupe spends enabled vs disabled
+    DONKEY_ON(ConfigRoot.DONKEY, "time-on", "-1"),
+    DONKEY_OFF(ConfigRoot.DONKEY, "time-off", "-1"),
+
     //      should the autocraft dupe work on donkeys/llamas/mules inside boats
     DONKEY_BOATS(ConfigRoot.DONKEY, "boats", "true"),
 
@@ -29,6 +37,10 @@ public enum ConfigPath {
 
     //      is the nether portal dupe enabled
     NETHER_DO(ConfigRoot.NETHER_PORTAL, "enabled", "true"),
+
+    //      time the dupe spends enabled vs disabled
+    NETHER_ON(ConfigRoot.NETHER_PORTAL, "time-on", "-1"),
+    NETHER_OFF(ConfigRoot.NETHER_PORTAL, "time-off", "-1"),
 
     //      how many ticks of freedom should be given before the items are no longer dupeable
     NETHER_TICKDELAY(ConfigRoot.NETHER_PORTAL, "tick-delay", "3"),
@@ -38,15 +50,15 @@ public enum ConfigPath {
     //      is the donkey dupe enabled?
     ANVIL_DO(ConfigRoot.ANVIL, "enabled", "true"),
 
-
-
+    //      time the dupe spends enabled vs disabled
+    ANVIL_ON(ConfigRoot.ANVIL, "time-on", "-1"),
+    ANVIL_OFF(ConfigRoot.ANVIL, "time-off", "-1"),
 
     //      should shulker boxes be duped at all?
     NON_STACK_DO_DUPE(ConfigRoot.NON_STACK, "dupe", "true"),
 
     //      should totems be duped at all?
     NON_STACK_STACKSIZE(ConfigRoot.NON_STACK, "stack-to", "64"),
-
 
 
     //      stack size for duped shulkers
