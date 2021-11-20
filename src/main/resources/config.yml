@@ -65,8 +65,8 @@ anvil-dupe:
   enabled: true
 
   # schedule for this dupe (hours on, followed by hours off)
-  time-on: 1
-  time-off: 2
+  time-on: -1
+  time-off: -1
 
 
 ########################
