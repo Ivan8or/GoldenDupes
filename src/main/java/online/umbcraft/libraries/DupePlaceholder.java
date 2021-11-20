@@ -29,7 +29,7 @@ public class DupePlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.1";
+        return plugin.getServer().getVersion();
     }
 
     @Override
@@ -64,6 +64,31 @@ public class DupePlaceholder extends PlaceholderExpansion {
                         ((plugin.getNetherPortalDupe() != null) &&
                                 (plugin.getNetherPortalDupe().getScheduler().isEnabled())
                                 ? enabled : disabled);
+                break;
+
+            case "anvil_time":
+                if(plugin.getAnvilDupe() == null)
+                    placeholder = "n/a";
+                else
+                    placeholder = plugin.getAnvilDupe().getScheduler().getTimeLeft();
+                break;
+            case "autocraft_time":
+                if(plugin.getAutocraftDupe() == null)
+                    placeholder = "n/a";
+                else
+                    placeholder = plugin.getAutocraftDupe().getScheduler().getTimeLeft();
+                break;
+            case "donkey_time":
+                if(plugin.getDonkeyDupe() == null)
+                    placeholder = "n/a";
+                else
+                    placeholder = plugin.getDonkeyDupe().getScheduler().getTimeLeft();
+                break;
+            case "portal_time":
+                if(plugin.getNetherPortalDupe() == null)
+                    placeholder = "n/a";
+                else
+                    placeholder = plugin.getNetherPortalDupe().getScheduler().getTimeLeft();
                 break;
         }
         return placeholder;

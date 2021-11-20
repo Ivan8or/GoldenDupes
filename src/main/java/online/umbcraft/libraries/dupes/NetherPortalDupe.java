@@ -39,8 +39,8 @@ public class NetherPortalDupe implements Listener {
         portalScheduler = new DupeScheduler(
                 plugin,
                 "portal",
-                plugin.getConfig().getInt(AUTOCRAFT_ON.path()),
-                plugin.getConfig().getInt(AUTOCRAFT_OFF.path())
+                plugin.getConfig().getInt(NETHER_ON.path()),
+                plugin.getConfig().getInt(NETHER_OFF.path())
         );
 
 

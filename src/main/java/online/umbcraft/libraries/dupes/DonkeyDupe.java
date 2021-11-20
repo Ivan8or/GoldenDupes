@@ -32,8 +32,8 @@ public class DonkeyDupe implements Listener {
         donkeyScheduler = new DupeScheduler(
                 plugin,
                 "donkey",
-                plugin.getConfig().getInt(AUTOCRAFT_ON.path()),
-                plugin.getConfig().getInt(AUTOCRAFT_OFF.path())
+                plugin.getConfig().getInt(DONKEY_ON.path()),
+                plugin.getConfig().getInt(DONKEY_OFF.path())
         );
 
     }
