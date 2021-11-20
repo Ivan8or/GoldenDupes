@@ -1,15 +1,20 @@
 package online.umbcraft.libraries;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class DupePlaceholder extends PlaceholderExpansion {
 
     final private GoldenDupes plugin;
+    final private String enabled;
+    final private String disabled;
 
     public DupePlaceholder(GoldenDupes plugin) {
         this.plugin = plugin;
+        enabled = plugin.getConfig().getString(ConfigPath.PLACEHOLDER_ENABLED_TEXT.path());
+        disabled = plugin.getConfig().getString(ConfigPath.PLACEHOLDER_DISABLED_TEXT.path());
     }
 
     @Override
@@ -24,7 +29,7 @@ public class DupePlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.0";
+        return "1.0.1";
     }
 
     @Override
@@ -36,29 +41,29 @@ public class DupePlaceholder extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer p, String s) {
         String placeholder = "INVALID_PLACEHOLDER";
         switch (s) {
-            case "anvil":
+            case "anvil_status":
                 placeholder =
                         ((plugin.getAnvilDupe() != null) &&
                                 (plugin.getAnvilDupe().getScheduler().isEnabled())
-                                ? "enabled" : "disabled");
+                                ? enabled : disabled);
                 break;
-            case "autocraft":
+            case "autocraft_status":
                 placeholder =
                         ((plugin.getAutocraftDupe() != null) &&
                                 (plugin.getAutocraftDupe().getScheduler().isEnabled())
-                                ? "enabled" : "disabled");
+                                ? enabled : disabled);
                 break;
-            case "donkey":
+            case "donkey_status":
                 placeholder =
                         ((plugin.getDonkeyDupe() != null) &&
                                 (plugin.getDonkeyDupe().getScheduler().isEnabled())
-                                ? "enabled" : "disabled");
+                                ? enabled : disabled);
                 break;
-            case "portal":
+            case "portal_status":
                 placeholder =
                         ((plugin.getNetherPortalDupe() != null) &&
                                 (plugin.getNetherPortalDupe().getScheduler().isEnabled())
-                                ? "enabled" : "disabled");
+                                ? enabled : disabled);
                 break;
         }
         return placeholder;

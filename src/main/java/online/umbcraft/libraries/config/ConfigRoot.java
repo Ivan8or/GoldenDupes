@@ -22,7 +22,10 @@ public enum ConfigRoot {
     SHULKERS("shulkers"),
 
     //  totem settings root path
-    TOTEMS("totems");
+    TOTEMS("totems"),
+
+    // placeholder settings root path
+    PLACEHOLDERS("placeholders");
 
     private final String path;
 

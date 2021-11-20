@@ -54,7 +54,6 @@ nether-portal:
   time-on: -1
   time-off: -1
 
-
   # how long should the minecart wait before it doesn't dupe items removed from it
   tick-delay: 3
 
@@ -94,6 +93,17 @@ totems:
   dupe: true
 # what is the max duped stack size?
   stack-to: 4
+
+
+########################
+#    MISC. SETTINGS    #
+########################
+
+placeholders:
+  enabled-text: Enabled
+  disabled-text: Disabled
+
+
 
 
 

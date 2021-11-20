@@ -73,8 +73,14 @@ public enum ConfigPath {
     TOTEMS_DO_DUPE(ConfigRoot.TOTEMS, "dupe", "true"),
 
     //      stack size for all other unstackable items
-    TOTEMS_STACKSIZE(ConfigRoot.TOTEMS, "stack-to", "5");
+    TOTEMS_STACKSIZE(ConfigRoot.TOTEMS, "stack-to", "5"),
 
+
+    //      text to be shown in the placeholder 'goldendupe_{dupe}_status' when dupe is enabled
+    PLACEHOLDER_ENABLED_TEXT(ConfigRoot.PLACEHOLDERS, "enabled-text","Enabled"),
+
+    //      text to be shown in the placeholder 'goldendupe_{dupe}_status' when dupe is disabled
+    PLACEHOLDER_DISABLED_TEXT(ConfigRoot.PLACEHOLDERS, "disabled-text","Disabled");
 
     private final String path;
     private final String value;
