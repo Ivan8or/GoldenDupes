@@ -75,11 +75,17 @@ public class DupeScheduler {
         return hhmmss;
     }
 
-    public String getTimeLeft() {
+    public long getMilisLeft() {
         long timePassed = (System.currentTimeMillis() - lastFlipTime);
-        long timeLeft = (enabled) ? milisOn - timePassed : milisOff - timePassed;
-        return milisToHHMMSS(timeLeft);
+        long milisCurState = (enabled)? milisOn : milisOff;
+        long timeLeft = milisCurState - timePassed;
+        return timeLeft;
     }
+
+    public String getTimeLeft() {
+        return milisToHHMMSS(getMilisLeft());
+    }
+
 
     public StateStamp getSavedTimestamp() throws IOException {
         Scanner sc = new Scanner(timeFile);
@@ -112,9 +118,9 @@ public class DupeScheduler {
         long epochDiff = curTime - oldEpoch;
         long offset = epochDiff % (milisOn + milisOff);
 
-        long delay;
-
         lastFlipTime = curTime - offset;
+
+        long delay;
 
         if (offset < hours[oldState_int]) {
             enabled = oldState;
@@ -122,6 +128,7 @@ public class DupeScheduler {
         } else {
             enabled = !oldState;
             delay = (milisOn + milisOff) - offset;
+            lastFlipTime+=hours[oldState_int];
         }
 
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
