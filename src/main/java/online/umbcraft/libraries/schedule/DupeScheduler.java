@@ -31,8 +31,8 @@ public class DupeScheduler {
     private boolean enabled = true;
     private long lastFlipTime = -1;
 
-    final private long ONE_HOUR = 3600000; // one hour is 3600000 milliseconds
-    //final private long ONE_HOUR = 5000; // test ONLY, do not keep
+    //final private long ONE_HOUR = 3600000; // one hour is 3600000 milliseconds
+    final private long ONE_HOUR = 5000; // test ONLY, do not keep
 
     final private long milisOn;
     final private long milisOff;
@@ -104,9 +104,6 @@ public class DupeScheduler {
     private void flipState() {
         enabled = !enabled;
         lastFlipTime = System.currentTimeMillis();
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            flipState();
-        }, ((enabled)? milisOn : milisOff)/50);
     }
 
     private void initializeState(long oldEpoch, boolean oldState) {
@@ -131,8 +128,17 @@ public class DupeScheduler {
             lastFlipTime+=hours[oldState_int];
         }
 
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        // flip state for each type of transition (on->off and off->on)
+        // two tasks are needed because time between flips might not be equal for both transitions
+
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             flipState();
-        }, delay/50);
+        }, delay/50,(milisOn + milisOff)/50);
+
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            flipState();
+        }, delay/50 + ((enabled)? milisOff : milisOn),(milisOn + milisOff)/50);
+
+
     }
 }
