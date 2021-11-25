@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 /*
 Tracks the status of a dupe (enabled, disabled)
@@ -31,8 +32,8 @@ public class DupeScheduler {
     private boolean enabled = true;
     private long lastFlipTime = -1;
 
-    //final private long ONE_HOUR = 3600000; // one hour is 3600000 milliseconds
-    final private long ONE_HOUR = 5000; // test ONLY, do not keep
+    final private long ONE_HOUR = 3600000; // one hour is 3600000 milliseconds
+    //final private long ONE_HOUR = 5000; // test ONLY, do not keep
 
     final private long milisOn;
     final private long milisOff;
@@ -41,9 +42,6 @@ public class DupeScheduler {
     public DupeScheduler(GoldenDupes plugin, String dupeName, int hoursOn, int hoursOff) throws IOException {
         this.dupeName = dupeName;
         this.plugin = plugin;
-
-
-        System.out.println("Dupe scheduler for "+dupeName+" is "+hoursOn+" on and "+hoursOff+" off");
 
         milisOn = hoursOn * ONE_HOUR;
         milisOff = hoursOff * ONE_HOUR;
@@ -133,11 +131,12 @@ public class DupeScheduler {
 
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             flipState();
+
         }, delay/50,(milisOn + milisOff)/50);
 
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             flipState();
-        }, delay/50 + ((enabled)? milisOff : milisOn),(milisOn + milisOff)/50);
+        }, (delay + ((enabled)? milisOff : milisOn))/50,(milisOn + milisOff)/50);
 
 
     }

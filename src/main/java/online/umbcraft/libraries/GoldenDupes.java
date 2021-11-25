@@ -81,7 +81,8 @@ public final class GoldenDupes extends JavaPlugin {
 
         // papi integration
         if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new DupePlaceholder(this).register();
+            DupePlaceholder phd = new DupePlaceholder(this);
+            phd.register();
         }
 
 

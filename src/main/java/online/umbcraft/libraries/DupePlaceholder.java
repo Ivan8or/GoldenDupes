@@ -5,6 +5,8 @@ import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.logging.Level;
+
 public class DupePlaceholder extends PlaceholderExpansion {
 
     final private GoldenDupes plugin;
@@ -35,6 +37,15 @@ public class DupePlaceholder extends PlaceholderExpansion {
     @Override
     public boolean persist() {
         return true;
+    }
+
+
+
+    public void reportStatus() {
+        String report = "";
+        report+="Anvil Stats: status="+this.onRequest(null, "anvil_status");
+        report+=", time="+this.onRequest(null, "anvil_time");
+        plugin.getLogger().log(Level.INFO, report);
     }
 
     @Override
