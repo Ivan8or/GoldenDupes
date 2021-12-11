@@ -77,7 +77,10 @@ public class DupeCommandExcecutor implements CommandExecutor  {
                 String.format("%sAuthor(s): %s", ChatColor.GOLD, plugin.getDescription().getAuthors())
         );
         sender.sendMessage(
-                String.format("%sSupport Link: %s%s", ChatColor.GOLD, ChatColor.GREEN, "https://github.com/Ivan8or/GoldenDupes/issues/new")
+                String.format("%sGet support here: %s%s", ChatColor.GOLD, ChatColor.GREEN, "https://discord.com/invite/Fe7FXuEsPs")
+        );
+        sender.sendMessage(
+                String.format("%sReport an issue here: %s%s", ChatColor.GOLD, ChatColor.GREEN, "https://github.com/Ivan8or/GoldenDupes/issues/new")
         );
         sender.sendMessage(
                 String.format("%srun %s/gd commands %sfor a list of commands.", ChatColor.GOLD, ChatColor.RED, ChatColor.GOLD)
