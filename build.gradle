@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation 'org.bstats:bstats-bukkit:2.2.1'
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
 }
 
 final String basePackage = "online.umbcraft.libs"
@@ -28,7 +28,7 @@ shadowJar {
 }
 
 group = 'online.umbcraft.libraries'
-version = '1.4.1'
+version = '1.4.2'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 
