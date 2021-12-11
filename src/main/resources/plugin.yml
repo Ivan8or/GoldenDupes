@@ -4,3 +4,7 @@ version: @version@
 api-version: 1.15
 author: Ivan8or
 description: Dupes from the golden days of minecraft!
+commands:
+  goldendupes:
+    description: goldendupes commands
+    aliases: [gd]
