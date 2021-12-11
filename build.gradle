@@ -24,7 +24,7 @@ dependencies {
 final String basePackage = "online.umbcraft.libs"
 
 shadowJar {
-    relocate "org.bstats", "${basePackage}.org.bstats"
+    relocate "org.bstats","${basePackage}.org.bstats"
 }
 
 group = 'online.umbcraft.libraries'
