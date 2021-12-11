@@ -18,8 +18,11 @@ import java.util.Map;
 public final class GoldenDupes extends JavaPlugin {
 
 
-    public void onEnable() {
+    public void onReloadCommand() {
+        reloadConfig();
+    }
 
+    public void onEnable() {
         //bStats metrics
         Metrics metrics = new Metrics(this, 11145);
 

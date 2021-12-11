@@ -16,12 +16,10 @@ import java.util.*;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
-public class AnvilDupe implements Listener {
+public class AnvilDupe extends Dupe implements Listener {
 
-    final private GoldenDupes plugin;
-
-    public AnvilDupe(final GoldenDupes plugin) {
-        this.plugin = plugin;
+    public AnvilDupe(GoldenDupes plugin) {
+        super(plugin);
     }
 
     // gives the player an extra item stack after their anvil breaks w/ a full inventory

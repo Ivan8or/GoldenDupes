@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class AutocraftDupe implements Listener {
+public class AutocraftDupe extends Dupe implements Listener {
 
     // super speedy set of all shulker items
     final private EnumSet<Material> shulkerBoxes;
@@ -34,11 +34,9 @@ public class AutocraftDupe implements Listener {
     // whether a player used the crafting autocomplete menu, or just clicked / drag clicked the item into the table
     final private Map<UUID, Boolean> clickValidity = new TreeMap<>();
 
-    final private GoldenDupes plugin;
-
 
     public AutocraftDupe(final GoldenDupes plugin) {
-        this.plugin = plugin;
+        super(plugin);
         
         // building an EnumSet of all shulkers
         shulkerBoxes = EnumSet.noneOf(Material.class);

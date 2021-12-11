@@ -19,9 +19,7 @@ import java.util.*;
 
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
-public class NetherPortalDupe implements Listener {
-
-    final private GoldenDupes plugin;
+public class NetherPortalDupe extends Dupe implements Listener {
 
     // collection of all items removed by players from minecarts in the recent past
     final private Map<UUID,List<DupedItem>> dupedItems;
@@ -30,7 +28,7 @@ public class NetherPortalDupe implements Listener {
     final private Map<UUID, Integer> transported;
 
     public NetherPortalDupe(final GoldenDupes plugin) {
-        this.plugin = plugin;
+        super(plugin);
 
         transported = new HashMap<>();
         dupedItems = new HashMap<>();

@@ -4,7 +4,7 @@
 #    @Ivan8or#7412 on discord    #
 ##################################
 
-#  1.12.2 autocraft dupe
+#  1.12 autocraft dupe
 autocraft-dupe:
 
 # is this dupe enabled?
@@ -56,7 +56,7 @@ anvil-dupe:
 # GLOBAL ITEM SETTINGS #
 ########################
 
-# any non-64 stacked item (buckets, armor, tools, et.)
+# any non-64 stacked item (buckets, armor, ender pearls, et.)
 non-stackables:
 # can they be duped?
   dupe: true

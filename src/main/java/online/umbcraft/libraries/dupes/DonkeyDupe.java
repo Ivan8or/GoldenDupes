@@ -17,12 +17,10 @@ import java.util.List;
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
 
-public class DonkeyDupe implements Listener {
-
-    final private GoldenDupes plugin;
+public class DonkeyDupe extends Dupe implements Listener {
 
     public DonkeyDupe(final GoldenDupes plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
 
