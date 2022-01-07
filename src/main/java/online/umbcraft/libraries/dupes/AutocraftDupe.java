@@ -71,9 +71,9 @@ public class AutocraftDupe extends Dupe implements Listener {
         }
 
 
-        // increment the number of extra items by 2
+        // increment the number of extra items
         final int currentAmnt = dupeAmnt.getOrDefault(playerUUID, 0);
-        dupeAmnt.put(playerUUID, currentAmnt + 2);
+        dupeAmnt.put(playerUUID, currentAmnt+1);
 
 
         // prolongs the time until the extra items reset to 0 by one second
@@ -124,7 +124,7 @@ public class AutocraftDupe extends Dupe implements Listener {
 
 
     // gives the player the extra items once they pick up after performing the dupe
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     public void onItemPickup(final EntityPickupItemEvent e) {
 
         // players who didn't do the dupe / other entities are not affected
@@ -132,21 +132,19 @@ public class AutocraftDupe extends Dupe implements Listener {
             return;
         }
 
-        final Player p = (Player) e.getEntity();
         final ItemStack toDupe = e.getItem().getItemStack();
-
+        final Player p = (Player) e.getEntity();
 
         // set stacksize to 64 if vanilla, get correct size otherwise
         final int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
                 ? 64 : decideAmount(toDupe.getType(), p.getUniqueId());
 
         final ItemStack duped = dupe(toDupe, stacksize);
-        p.getInventory().addItem(duped);
 
-        if (stacksize != 1) { // this is a silly way to do it, but spigot api is poopy
-            e.getItem().remove();
-            e.setCancelled(true);
-        }
+        //e.getItem().setItemStack(duped);
+        e.getItem().setItemStack(null);
+        e.setCancelled(true);
+        p.getInventory().addItem(duped);
 
         // player only tries to dupe the first item he picks up
         dupeAmnt.remove(p.getUniqueId());
