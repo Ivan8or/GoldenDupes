@@ -32,7 +32,7 @@ shadowJar {
 }
 
 group = 'online.umbcraft.libraries'
-version = 'C1-0.0.5'
+version = 'C1-0.0.7'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 

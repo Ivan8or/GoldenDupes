@@ -6,6 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /*
@@ -24,6 +28,8 @@ where on | off = the state of the dupe at this time
 
 
 public class DupeScheduler {
+
+    private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(0);
 
     final private String dupeName;
     final private File timeFile;
@@ -102,6 +108,7 @@ public class DupeScheduler {
     private void flipState() {
         enabled = !enabled;
         lastFlipTime = System.currentTimeMillis();
+        plugin.getLogger().log(Level.SEVERE, dupeName+" dupe is now "+((enabled)?"enabled":"disabled"));
     }
 
     private void initializeState(long oldEpoch, boolean oldState) {
@@ -129,15 +136,19 @@ public class DupeScheduler {
         // flip state for each type of transition (on->off and off->on)
         // two tasks are needed because time between flips might not be equal for both transitions
 
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            flipState();
+        // schedule the event with system time
+        executor.scheduleAtFixedRate(this::flipState, delay, (milisOn + milisOff), TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(this::flipState, (delay + ((enabled)? milisOff : milisOn)), (milisOn + milisOff), TimeUnit.MILLISECONDS);
 
-        }, delay/50,(milisOn + milisOff)/50);
+        // schedule the event with bukkit ticks for time (affected by lag)
+        //plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this::flipState, delay/50,(milisOn + milisOff)/50);
+        //plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this::flipState, (delay + ((enabled)? milisOff : milisOn))/50,(milisOn + milisOff)/50);
 
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            flipState();
-        }, (delay + ((enabled)? milisOff : milisOn))/50,(milisOn + milisOff)/50);
 
+        // for debugging::::
+//        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+//            plugin.getLogger().log(Level.SEVERE,dupeName+" status: "+((enabled)?"enabled":"disabled")+"; time left: "+getTimeLeft());
+//        }, 0,10);
 
     }
 }
