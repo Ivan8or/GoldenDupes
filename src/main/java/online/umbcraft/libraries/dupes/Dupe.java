@@ -15,24 +15,21 @@ public abstract class Dupe {
 
     final protected GoldenDupes plugin;
 
-    final private boolean TOTEMS_EXIST;
-    final private boolean SHULKERS_EXIST;
+    final static private boolean TOTEMS_EXIST;
+    final static private boolean SHULKERS_EXIST;
 
-    final private EnumSet<Material> shulkerBoxes;
+    final static private EnumSet<Material> shulkerBoxes;
 
-    private boolean dupeNonStacking;
-    private int nonStackingStackSize;
+    private static boolean dupeNonStacking;
+    private static int nonStackingStackSize;
 
-    private boolean dupeShulkers;
-    private int shulkerStackSize;
+    private static boolean dupeShulkers;
+    private static int shulkerStackSize;
 
-    private boolean dupeTotems;
-    private int totemStackSize;
+    private static boolean dupeTotems;
+    private static int totemStackSize;
 
-    public Dupe(GoldenDupes plugin) {
-        this.plugin = plugin;
-        loadConfig(plugin.getConfig());
-
+    static {
         TOTEMS_EXIST = Material.matchMaterial("minecraft:totem_of_undying") != null;
         SHULKERS_EXIST = Material.matchMaterial("minecraft:shulker_shell") != null;
 
@@ -46,7 +43,13 @@ public abstract class Dupe {
                     .forEach(shulkerBoxes::add);
     }
 
-    public void loadConfig(FileConfiguration config) {
+
+    public Dupe(GoldenDupes plugin) {
+        this.plugin = plugin;
+
+    }
+
+    public static void loadConfig(FileConfiguration config) {
         dupeNonStacking = config.getBoolean(NON_STACK_DO_DUPE.path());
         nonStackingStackSize = config.getInt(NON_STACK_STACKSIZE.path());
 
