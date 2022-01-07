@@ -84,27 +84,7 @@ public class DonkeyDupe extends Dupe implements Listener {
 
         for (int i = 0; i <= 16; i++) {
             ItemStack item = toClone.getItem(i);
-
-            if (
-                    item == null
-            ) continue;
-
-            if (
-                    item.getMaxStackSize() == 1 &&
-                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
-            ) break;
-
-            if (
-                    item.getType().name().contains("SHULKER_BOX") &&
-                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
-            ) break;
-
-            if (
-                    item.getType() == Material.TOTEM_OF_UNDYING &&
-                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
-            ) break;
-
-            result.setItem(i, toClone.getItem(i));
+            result.setItem(i, dupe(item, item.getAmount()));
         }
         return result;
     }

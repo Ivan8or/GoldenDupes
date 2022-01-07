@@ -48,22 +48,7 @@ public class AnvilDupe extends Dupe implements Listener {
 
             if (l.getBlock().getType() == Material.AIR) {
 
-                if (
-                        toDupe.getMaxStackSize() == 1 &&
-                                !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
-                ) return;
-
-                if (
-                        toDupe.getType().name().contains("SHULKER_BOX") &&
-                                !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
-                ) return;
-
-                if (
-                        toDupe.getType() == Material.TOTEM_OF_UNDYING &&
-                                !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
-                ) return;
-
-                Item dropped = p.getWorld().dropItem(p.getLocation(),toDupe.clone());
+                Item dropped = p.getWorld().dropItem(p.getLocation(), dupe(toDupe, toDupe.getAmount()));
                 dropped.setVelocity(p.getEyeLocation().getDirection());
             }
 

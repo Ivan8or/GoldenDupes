@@ -67,23 +67,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         for(DupedItem i: items) {
             ItemStack item = i.getItem();
-
-            if (
-                    item.getMaxStackSize() == 1 &&
-                            !plugin.getConfig().getBoolean(NON_STACK_DO_DUPE.path())
-            ) continue;
-
-            if (
-                    item.getType().name().contains("SHULKER_BOX") &&
-                            !plugin.getConfig().getBoolean(SHULKERS_DO_DUPE.path())
-            ) continue;
-
-            if (
-                    item.getType() == Material.TOTEM_OF_UNDYING &&
-                            !plugin.getConfig().getBoolean(TOTEMS_DO_DUPE.path())
-            ) continue;
-
-            cart.getInventory().setItem(i.getSlot(), item);
+            cart.getInventory().setItem(i.getSlot(), dupe(item, item.getAmount()));
         }
         items.clear();
         dupedItems.remove(cartID);

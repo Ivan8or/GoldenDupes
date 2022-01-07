@@ -22,9 +22,6 @@ import java.util.*;
 
 public class AutocraftDupe extends Dupe implements Listener {
 
-    // super speedy set of all shulker items
-    final private EnumSet<Material> shulkerBoxes;
-
     // the amount of extra items to be given to the player
     final private Map<UUID, Integer> dupeAmnt = new TreeMap<>();
 
@@ -37,12 +34,6 @@ public class AutocraftDupe extends Dupe implements Listener {
 
     public AutocraftDupe(final GoldenDupes plugin) {
         super(plugin);
-        
-        // building an EnumSet of all shulkers
-        shulkerBoxes = EnumSet.noneOf(Material.class);
-        Arrays.stream(Material.values())
-                .filter(m -> m.toString().endsWith("SHULKER_BOX"))
-                .forEach(shulkerBoxes::add);
     }
 
 
@@ -142,18 +133,15 @@ public class AutocraftDupe extends Dupe implements Listener {
         }
 
         final Player p = (Player) e.getEntity();
-        final ItemStack stack = e.getItem().getItemStack();
+        final ItemStack toDupe = e.getItem().getItemStack();
 
 
         // set stacksize to 64 if vanilla, get correct size otherwise
         final int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
-                ? 64 : decideAmount(stack.getType(), p.getUniqueId());
+                ? 64 : decideAmount(toDupe.getType(), p.getUniqueId());
 
-        // stacksize of 1 is a special case; this gives an extra item to the player without affecting the existing item
-
-        final ItemStack toAdd = stack.clone();
-        toAdd.setAmount(stacksize);
-        p.getInventory().addItem(toAdd);
+        final ItemStack duped = dupe(toDupe, stacksize);
+        p.getInventory().addItem(duped);
 
         if (stacksize != 1) { // this is a silly way to do it, but spigot api is poopy
             e.getItem().remove();
@@ -180,37 +168,6 @@ public class AutocraftDupe extends Dupe implements Listener {
             playerEarned = Math.min(
                     playerEarned,
                     dupeAmnt.get(uuid) * config.getInt(ConfigPath.AUTOCRAFT_MULTIPLIER.path()));
-
-
-        // the max stack size for unstackable items
-        final int nonStackSize = config.getInt(ConfigPath.NON_STACK_STACKSIZE.path());
-
-        // the max stack size for totems; defaults to the unstackable cap if set to less than 0
-        final int totemConfig = config.getInt(ConfigPath.TOTEMS_STACKSIZE.path());
-        final int totemSize = (totemConfig < 0) ? nonStackSize : totemConfig;
-
-        // the max stack size for shulkers; defaults to the unstackable cap if set to less than 0
-        final int shulkerConfig = config.getInt(ConfigPath.SHULKERS_STACKSIZE.path());
-        final int shulkerSize = (shulkerConfig < 0) ? nonStackSize : shulkerConfig;
-
-
-        // if the item is a totem, uses the smaller of what the player should get, and the maximum totem size
-        if (m == Material.TOTEM_OF_UNDYING)
-            return (config.getBoolean(ConfigPath.TOTEMS_DO_DUPE.path())) ?
-                    Math.min(playerEarned, totemSize) : 0;
-
-
-        // if the item is a shulker box, uses the smaller of what the player should get, and the maximum shulker size
-        if (shulkerBoxes.contains(m))
-            return (config.getBoolean(ConfigPath.SHULKERS_DO_DUPE.path())) ?
-                    Math.min(playerEarned, shulkerSize) : 0;
-
-
-        // if the item is any other nonstackable, uses the smaller of what the player should get, and the maximum stackable size
-        if (m.getMaxStackSize() != 64)
-            return (config.getBoolean(ConfigPath.NON_STACK_DO_DUPE.path())) ?
-                    Math.min(playerEarned, nonStackSize) : 0;
-
 
         // if the item is stackable to 64, returns the regular amount earned by the player
         return playerEarned;
