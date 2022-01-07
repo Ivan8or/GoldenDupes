@@ -108,35 +108,42 @@ public abstract class Dupe {
     // takes in the item to dupe and the maximum acceptable stack size before considering config limits
     public ItemStack dupe(ItemStack toDupe, int amount) {
 
-
-
-        if (toDupe == null)
+        int dupeAmount = newAmount(toDupe, amount);
+        if(dupeAmount == 0)
             return new ItemStack(Material.AIR);
 
+        ItemStack duped = toDupe.clone();
+        duped.setAmount(dupeAmount);
+        return duped;
+    }
+
+
+    public int newAmount(ItemStack toDupe, int idealAmount) {
+        if (toDupe == null)
+            return 0;
+
         boolean dupe = true;
-        int stacksize = amount;
+        int stacksize = idealAmount;
         boolean isSize64 = toDupe.getMaxStackSize() == 64;
 
         if (!isSize64) {
             dupe = dupeNonStacking;
-            stacksize = Math.min(amount, nonStackingStackSize);
+            stacksize = Math.min(idealAmount, nonStackingStackSize);
         }
 
         if (TOTEMS_EXIST && toDupe.getType() == TOTEM_MATERIAL) {
             dupe = dupeTotems;
-            stacksize = Math.min(amount, totemStackSize);
+            stacksize = Math.min(idealAmount, totemStackSize);
         }
 
         if (SHULKERS_EXIST && shulkerBoxes.contains(toDupe.getType())) {
             dupe = dupeShulkers;
-            stacksize = Math.min(amount, shulkerStackSize);
+            stacksize = Math.min(idealAmount, shulkerStackSize);
         }
 
         if (!dupe)
-            return new ItemStack(Material.AIR);
+            return 0;
 
-        ItemStack duped = toDupe.clone();
-        duped.setAmount(stacksize);
-        return duped;
+        return stacksize;
     }
 }

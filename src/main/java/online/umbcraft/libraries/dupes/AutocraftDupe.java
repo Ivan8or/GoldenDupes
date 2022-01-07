@@ -31,11 +31,9 @@ public class AutocraftDupe extends Dupe implements Listener {
     // whether a player used the crafting autocomplete menu, or just clicked / drag clicked the item into the table
     final private Map<UUID, Boolean> clickValidity = new TreeMap<>();
 
-
     public AutocraftDupe(final GoldenDupes plugin) {
         super(plugin);
     }
-
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onClickInv(final InventoryClickEvent e) {
@@ -136,14 +134,16 @@ public class AutocraftDupe extends Dupe implements Listener {
         final Player p = (Player) e.getEntity();
 
         // set stacksize to 64 if vanilla, get correct size otherwise
-        final int stacksize = (plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
-                ? 64 : decideAmount(toDupe.getType(), p.getUniqueId());
+        final int stacksize = decideAmount(toDupe.getType(), p.getUniqueId());
 
         final ItemStack duped = dupe(toDupe, stacksize);
 
-        //e.getItem().setItemStack(duped);
         e.getItem().setItemStack(null);
         e.setCancelled(true);
+        int currentMaxStack = p.getInventory().getMaxStackSize();
+        int newMaxStack = newAmount(toDupe, stacksize);
+
+        p.getInventory().setMaxStackSize(Math.max(currentMaxStack, newMaxStack));
         p.getInventory().addItem(duped);
 
         // player only tries to dupe the first item he picks up
@@ -155,10 +155,12 @@ public class AutocraftDupe extends Dupe implements Listener {
     private int decideAmount(final Material m, final UUID uuid) {
 
         final FileConfiguration config = plugin.getConfig();
+
+        if(plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
+            return 64;
+
         // defaults to the max amount of items the player can receive
-        int playerEarned = Math.min(
-                64,
-                config.getInt(ConfigPath.AUTOCRAFT_MAX_ITEMS.path()));
+        int playerEarned = config.getInt(ConfigPath.AUTOCRAFT_MAX_ITEMS.path());
 
 
         // if Items-Per-Click is enabled, uses the smaller between that value and the maximum
