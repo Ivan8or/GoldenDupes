@@ -2,10 +2,7 @@ package online.umbcraft.libraries;
 
 import online.umbcraft.libraries.config.ConfigAutofill;
 import online.umbcraft.libraries.config.ConfigPath;
-import online.umbcraft.libraries.dupes.AnvilDupe;
-import online.umbcraft.libraries.dupes.AutocraftDupe;
-import online.umbcraft.libraries.dupes.DonkeyDupe;
-import online.umbcraft.libraries.dupes.NetherPortalDupe;
+import online.umbcraft.libraries.dupes.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimpleBarChart;
 import org.bstats.charts.SimplePie;
@@ -66,6 +63,8 @@ public final class GoldenDupes extends JavaPlugin {
 
         // fixing up config if it doesn't have some particular settings
         ConfigAutofill.autofill(this);
+
+        Dupe.loadConfig(getConfig());
 
         // starts autocraft dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
