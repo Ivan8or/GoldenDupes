@@ -16,6 +16,8 @@ public abstract class Dupe {
     final protected GoldenDupes plugin;
 
     final static private boolean TOTEMS_EXIST;
+    final static private boolean USE_LEGACY_TOTEM;
+    final static private Material TOTEM_MATERIAL;
     final static private boolean SHULKERS_EXIST;
 
     final static private EnumSet<Material> shulkerBoxes;
@@ -30,17 +32,56 @@ public abstract class Dupe {
     private static int totemStackSize;
 
     static {
-        TOTEMS_EXIST = Material.matchMaterial("minecraft:totem_of_undying") != null;
-        SHULKERS_EXIST = Material.matchMaterial("minecraft:shulker_shell") != null;
+
+        boolean shulkersExist;
+        try {
+            Material.valueOf("SHULKER_SHELL");
+            shulkersExist = true;
+        }
+        catch(IllegalArgumentException e) {
+            shulkersExist = false;
+        }
+
+        boolean totemsExist;
+        Material totemMaterial = null;
+        try {
+            totemMaterial = Material.valueOf("TOTEM_OF_UNDYING");
+            totemsExist = true;
+        }
+        catch(IllegalArgumentException e) {
+            totemsExist = false;
+        }
+
+        boolean legacyTotems = false;
+
+        if(!totemsExist) {
+            try {
+                totemMaterial = Material.valueOf("TOTEM");
+                legacyTotems = true;
+                totemsExist = true;
+            }
+            catch(IllegalArgumentException e) {
+                legacyTotems = false;
+            }
+        }
+
+        TOTEMS_EXIST = totemsExist;
+        TOTEM_MATERIAL = totemMaterial;
+
+        SHULKERS_EXIST = shulkersExist;
+        USE_LEGACY_TOTEM = legacyTotems;
 
         shulkerBoxes = EnumSet.noneOf(Material.class);
 
-
+        System.out.println("do shulkers exist? "+SHULKERS_EXIST);
+        System.out.println("do totems exist? "+TOTEMS_EXIST);
+        System.out.println("legacy totems? "+USE_LEGACY_TOTEM);
         // building an EnumSet of all colors of shulker box
-        if (SHULKERS_EXIST)
+        if (SHULKERS_EXIST) {
             Arrays.stream(Material.values())
-                    .filter(m -> m.name().endsWith("SHULKER_BOX"))
+                    .filter(m -> m.name().contains("SHULKER_BOX"))
                     .forEach(shulkerBoxes::add);
+        }
     }
 
 
@@ -67,27 +108,27 @@ public abstract class Dupe {
     // takes in the item to dupe and the maximum acceptable stack size before considering config limits
     public ItemStack dupe(ItemStack toDupe, int amount) {
 
+
         if (toDupe == null)
             return new ItemStack(Material.AIR);
 
-        boolean dupe = false;
+        boolean dupe = true;
         int stacksize = amount;
         boolean isSize64 = toDupe.getMaxStackSize() == 64;
 
-
         if (!isSize64) {
             dupe = dupeNonStacking;
-            stacksize = Math.max(stacksize, nonStackingStackSize);
+            stacksize = Math.max(amount, nonStackingStackSize);
         }
 
-        if (TOTEMS_EXIST && toDupe.getType() == Material.TOTEM_OF_UNDYING) {
+        if (TOTEMS_EXIST && toDupe.getType() == TOTEM_MATERIAL) {
             dupe = dupeTotems;
-            stacksize = Math.max(stacksize, totemStackSize);
+            stacksize = Math.min(amount, totemStackSize);
         }
 
         if (SHULKERS_EXIST && shulkerBoxes.contains(toDupe.getType())) {
             dupe = dupeShulkers;
-            stacksize = Math.max(stacksize, shulkerStackSize);
+            stacksize = Math.min(amount, shulkerStackSize);
         }
 
         if (!dupe)
