@@ -109,6 +109,7 @@ public abstract class Dupe {
     public ItemStack dupe(ItemStack toDupe, int amount) {
 
 
+
         if (toDupe == null)
             return new ItemStack(Material.AIR);
 
@@ -118,7 +119,7 @@ public abstract class Dupe {
 
         if (!isSize64) {
             dupe = dupeNonStacking;
-            stacksize = Math.max(amount, nonStackingStackSize);
+            stacksize = Math.min(amount, nonStackingStackSize);
         }
 
         if (TOTEMS_EXIST && toDupe.getType() == TOTEM_MATERIAL) {
