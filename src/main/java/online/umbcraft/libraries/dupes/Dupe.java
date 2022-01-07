@@ -49,6 +49,7 @@ public abstract class Dupe {
 
     }
 
+    // loads cofig values regarding item limits
     public static void loadConfig(FileConfiguration config) {
         dupeNonStacking = config.getBoolean(NON_STACK_DO_DUPE.path());
         nonStackingStackSize = config.getInt(NON_STACK_STACKSIZE.path());
@@ -61,6 +62,9 @@ public abstract class Dupe {
     }
 
 
+
+    // dupes an item
+    // takes in the item to dupe and the maximum acceptable stack size before considering config limits
     public ItemStack dupe(ItemStack toDupe, int amount) {
 
         if (toDupe == null)
