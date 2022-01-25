@@ -138,7 +138,6 @@ public class AutocraftDupe extends Dupe implements Listener {
 
         final ItemStack duped = dupe(toDupe, stacksize);
 
-        e.getItem().setItemStack(null);
         e.setCancelled(true);
         int currentMaxStack = p.getInventory().getMaxStackSize();
         int newMaxStack = newAmount(toDupe, stacksize);
