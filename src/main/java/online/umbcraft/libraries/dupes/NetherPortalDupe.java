@@ -67,7 +67,8 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         for(DupedItem i: items) {
             ItemStack item = i.getItem();
-            cart.getInventory().setItem(i.getSlot(), dupe(item, item.getAmount()));
+            if(item != null)
+                cart.getInventory().setItem(i.getSlot(), dupe(item, item.getAmount()));
         }
         items.clear();
         dupedItems.remove(cartID);

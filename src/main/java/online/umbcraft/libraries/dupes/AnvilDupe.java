@@ -46,8 +46,7 @@ public class AnvilDupe extends Dupe implements Listener {
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () ->
         {
 
-            if (l.getBlock().getType() == Material.AIR) {
-
+            if (l.getBlock().getType() == Material.AIR && toDupe != null) {
                 Item dropped = p.getWorld().dropItem(p.getLocation(), dupe(toDupe, toDupe.getAmount()));
                 dropped.setVelocity(p.getEyeLocation().getDirection());
             }

@@ -129,7 +129,6 @@ public class AutocraftDupe extends Dupe implements Listener {
         if (!dupeAmnt.containsKey(e.getEntity().getUniqueId())) {
             return;
         }
-
         final ItemStack toDupe = e.getItem().getItemStack();
         final Player p = (Player) e.getEntity();
 

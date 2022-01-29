@@ -84,7 +84,8 @@ public class DonkeyDupe extends Dupe implements Listener {
 
         for (int i = 0; i <= 16; i++) {
             ItemStack item = toClone.getItem(i);
-            result.setItem(i, dupe(item, item.getAmount()));
+            if(item != null)
+                result.setItem(i, dupe(item, item.getAmount()));
         }
         return result;
     }
