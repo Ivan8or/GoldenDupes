@@ -67,8 +67,9 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         for(DupedItem i: items) {
             ItemStack item = i.getItem();
-            if(item != null)
+            if(item != null) {
                 cart.getInventory().setItem(i.getSlot(), dupe(item, item.getAmount()));
+            }
         }
         items.clear();
         dupedItems.remove(cartID);
@@ -91,20 +92,19 @@ public class NetherPortalDupe extends Dupe implements Listener {
         final int tickSpace = plugin.getConfig().getInt(ConfigPath.NETHER_TICKDELAY.path());
         switch(e.getAction()) {
             case MOVE_TO_OTHER_INVENTORY:
-                trackDupedItem(e.getCurrentItem(), slot, cartUUID, tickSpace);
-                break;
             case COLLECT_TO_CURSOR:
             case PICKUP_ALL:
             case PICKUP_HALF:
             case PICKUP_ONE:
             case PICKUP_SOME:
                 trackDupedItem(e.getCurrentItem(), slot, cartUUID, tickSpace);
+                break;
         }
     }
 
     private void trackDupedItem(final ItemStack item, final int slot, final UUID uuid, final int ticks) {
 
-        if(item.getType() == Material.AIR) {
+        if(item == null || item.getType() == Material.AIR) {
             return;
         }
 
