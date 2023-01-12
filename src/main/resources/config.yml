@@ -42,7 +42,7 @@ nether-portal:
   enabled: true
 
   # how long should the minecart wait before it doesn't dupe items removed from it
-  tick-delay: 3
+  tick-delay: 5
 
 
 # 1.17 anvil dupe
@@ -50,6 +50,19 @@ anvil-dupe:
 
   # is this dupe enabled?
   enabled: true
+
+
+# 1.12 piston dupe
+piston-dupe:
+
+  # is this dupe enabled?
+  enabled: true
+
+  # how long should the piston's itemframe wait before it doesn't dupe after it is broken
+  tick-delay: 5
+
+  # can dispensers and other non-player sources dupe items from item frames
+  non-players: true
 
 
 ########################
@@ -70,7 +83,7 @@ shulkers:
 # what is the max duped stack size?
   stack-to: 1
 
-# totems pf undying
+# totems of undying
 totems:
 # can they be duped?
   dupe: true

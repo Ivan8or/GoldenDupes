@@ -14,6 +14,10 @@ public enum ConfigRoot {
     // 1.17 anvil dupe root path
     ANVIL("anvil-dupe"),
 
+    // 1.12 piston dupe
+    PISTON("piston-dupe"),
+
+
 
     //  item limits root path
     NON_STACK("non-stackables"),

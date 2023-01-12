@@ -60,6 +60,21 @@ public final class GoldenDupes extends JavaPlugin {
                     return categories[categories.length-1];
                 }));
 
+        final ConfigPath[] allDoFlags = {
+                ConfigPath.AUTOCRAFT_DO,
+                ConfigPath.PISTON_DO,
+                ConfigPath.NETHER_DO,
+                ConfigPath.ANVIL_DO,
+                ConfigPath.DONKEY_DO};
+
+
+        for(ConfigPath dupe: allDoFlags) {
+            metrics.addCustomChart(new SimplePie(dupe.toString(),
+                    () -> {
+                        return getConfig().getString(dupe.path());
+                    }));
+        }
+
 
         // fixing up config if it doesn't have some particular settings
         ConfigAutofill.autofill(this);
@@ -84,10 +99,18 @@ public final class GoldenDupes extends JavaPlugin {
                     new NetherPortalDupe(this), this);
         }
 
+        // starts anvil dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
         getServer().getPluginManager().registerEvents(
                 new AnvilDupe(this), this);
         }
+
+        // starts piston dupe handler if the dupe is enabled
+        if (getConfig().getBoolean(ConfigPath.PISTON_DO.path())) {
+            getServer().getPluginManager().registerEvents(
+                    new PistonDupe(this), this);
+        }
+
     }
 
 }

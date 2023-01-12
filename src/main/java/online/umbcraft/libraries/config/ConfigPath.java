@@ -31,12 +31,22 @@ public enum ConfigPath {
     NETHER_DO(ConfigRoot.NETHER_PORTAL, "enabled", "true"),
 
     //      how many ticks of freedom should be given before the items are no longer dupeable
-    NETHER_TICKDELAY(ConfigRoot.NETHER_PORTAL, "tick-delay", "3"),
+    NETHER_TICKDELAY(ConfigRoot.NETHER_PORTAL, "tick-delay", "5"),
 
 
 
-    //      is the donkey dupe enabled?
+    //      is the anvil dupe enabled?
     ANVIL_DO(ConfigRoot.ANVIL, "enabled", "true"),
+
+
+
+    //      is the piston dupe enabled?
+    PISTON_DO(ConfigRoot.PISTON, "enabled", "true"),
+
+    PISTON_TICKDELAY(ConfigRoot.PISTON, "tick-delay", "5"),
+
+    PISTON_NONPLAYER(ConfigRoot.PISTON, "non-players", "true"),
+
 
 
 
