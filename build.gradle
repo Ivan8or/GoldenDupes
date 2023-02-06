@@ -24,7 +24,7 @@ shadowJar {
 }
 
 group = 'online.umbcraft.libraries'
-version = '1.5.0'
+version = '1.5.1'
 description = 'Golden Dupes - dupes from the Golden days of minecraft!'
 sourceCompatibility = '1.8'
 

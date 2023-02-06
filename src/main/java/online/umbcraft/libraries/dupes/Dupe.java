@@ -1,6 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.EnumSet;
 
+import static java.util.logging.Level.INFO;
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
 public abstract class Dupe {
@@ -73,9 +75,9 @@ public abstract class Dupe {
 
         shulkerBoxes = EnumSet.noneOf(Material.class);
 
-        System.out.println("do shulkers exist? "+SHULKERS_EXIST);
-        System.out.println("do totems exist? "+TOTEMS_EXIST);
-        System.out.println("legacy totems? "+USE_LEGACY_TOTEM);
+        Bukkit.getLogger().log(INFO,"do shulkers exist? "+SHULKERS_EXIST);
+        Bukkit.getLogger().log(INFO,"do totems exist? "+TOTEMS_EXIST);
+        Bukkit.getLogger().log(INFO,"legacy totems? "+USE_LEGACY_TOTEM);
         // building an EnumSet of all colors of shulker box
         if (SHULKERS_EXIST) {
             Arrays.stream(Material.values())

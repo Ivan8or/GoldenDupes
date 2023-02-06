@@ -5,6 +5,7 @@ import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -142,7 +143,9 @@ public class AutocraftDupe extends Dupe implements Listener {
         int newMaxStack = newAmount(toDupe, stacksize);
 
         p.getInventory().setMaxStackSize(Math.max(currentMaxStack, newMaxStack));
-        p.getInventory().addItem(duped);
+
+        Item onGround = p.getLocation().getWorld().dropItem(p.getLocation(), duped);
+        onGround.setPickupDelay(1);
 
         // player only tries to dupe the first item he picks up
         dupeAmnt.remove(p.getUniqueId());
