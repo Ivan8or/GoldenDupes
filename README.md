@@ -11,7 +11,7 @@ minecart nether portal dupe from (1.8)
 crafting autocomplete dupe from (1.12.2)
 donkey dupe from (1.15.2)
 anvil dupe from (1.17)
-
+piston dupe from (1.12.2)
 
 Issues:
 If you encounter any issues, create an issue. Be sure to be as specific as possible!
