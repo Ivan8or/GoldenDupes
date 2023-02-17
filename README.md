@@ -20,4 +20,4 @@ If you encounter any issues, create an issue. Be sure to be as specific as possi
 
 <br>
 
-to build from source, download the git repo and run `maven clean shadowJar` while in the root of the repository. 
+to build from source, download the git repo and run `gradle clean shadowJar` while in the root of the repository. 
