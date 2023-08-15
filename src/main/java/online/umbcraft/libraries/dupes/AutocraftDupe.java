@@ -51,6 +51,7 @@ public class AutocraftDupe extends Dupe implements Listener {
     public void denyDupeClick(final UUID player) {
         clickValidity.put(player, false);
 
+//        Bukkit.getAsyncScheduler();
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             clickValidity.remove(player);
         }, 1L);
