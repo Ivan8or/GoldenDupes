@@ -19,8 +19,6 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-import static online.umbcraft.libraries.config.ConfigPath.*;
-
 public class AnvilDupe extends Dupe implements Listener {
 
     final private Set<Location> anvilsInUse = new HashSet<>();
@@ -45,7 +43,7 @@ public class AnvilDupe extends Dupe implements Listener {
             return;
 
         Location l = e.getClickedInventory().getLocation();
-        Location blockBelow = l.add(new Vector(0,-1,0));
+        Location blockBelow = l.clone().add(new Vector(0,-1,0));
         ItemStack toDupe = e.getCurrentItem();
         Player p = (Player) e.getWhoClicked();
 
