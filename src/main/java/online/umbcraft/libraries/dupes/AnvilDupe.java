@@ -52,7 +52,7 @@ public class AnvilDupe extends Dupe implements Listener {
             return;
 
         // return if anvil is not about to break
-        if(l.getBlock().getType() != Material.DAMAGED_ANVIL)
+        if(!l.getBlock().getType().name().equals("DAMAGED_ANVIL") || !l.getBlock().getType().name().equals("ANVIL"))
             return;
 
         // preventing the anvil or the block beneath the anvil from being broken / pushed
