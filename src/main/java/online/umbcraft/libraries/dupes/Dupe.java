@@ -1,28 +1,13 @@
 package online.umbcraft.libraries.dupes;
 
-import online.umbcraft.libraries.GoldenDupes;
-import org.bukkit.Bukkit;
+import online.umbcraft.libraries.utils.MaterialUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-
-import static java.util.logging.Level.INFO;
 import static online.umbcraft.libraries.config.ConfigPath.*;
 
 public abstract class Dupe {
-
-    final protected GoldenDupes plugin;
-
-    final static private boolean TOTEMS_EXIST;
-    final static private boolean USE_LEGACY_TOTEM;
-    final static private Material TOTEM_MATERIAL;
-    final static private boolean SHULKERS_EXIST;
-
-    final static private EnumSet<Material> shulkerBoxes;
 
     private static boolean dupeNonStacking;
     private static int nonStackingStackSize;
@@ -33,63 +18,7 @@ public abstract class Dupe {
     private static boolean dupeTotems;
     private static int totemStackSize;
 
-    static {
-
-        boolean shulkersExist;
-        try {
-            Material.valueOf("SHULKER_SHELL");
-            shulkersExist = true;
-        }
-        catch(IllegalArgumentException e) {
-            shulkersExist = false;
-        }
-
-        boolean totemsExist;
-        Material totemMaterial = null;
-        try {
-            totemMaterial = Material.valueOf("TOTEM_OF_UNDYING");
-            totemsExist = true;
-        }
-        catch(IllegalArgumentException e) {
-            totemsExist = false;
-        }
-
-        boolean legacyTotems = false;
-
-        if(!totemsExist) {
-            try {
-                totemMaterial = Material.valueOf("TOTEM");
-                legacyTotems = true;
-                totemsExist = true;
-            }
-            catch(IllegalArgumentException e) {
-                legacyTotems = false;
-            }
-        }
-
-        TOTEMS_EXIST = totemsExist;
-        TOTEM_MATERIAL = totemMaterial;
-
-        SHULKERS_EXIST = shulkersExist;
-        USE_LEGACY_TOTEM = legacyTotems;
-
-        shulkerBoxes = EnumSet.noneOf(Material.class);
-
-        Bukkit.getLogger().log(INFO,"do shulkers exist? "+SHULKERS_EXIST);
-        Bukkit.getLogger().log(INFO,"do totems exist? "+TOTEMS_EXIST);
-        Bukkit.getLogger().log(INFO,"legacy totems? "+USE_LEGACY_TOTEM);
-        // building an EnumSet of all colors of shulker box
-        if (SHULKERS_EXIST) {
-            Arrays.stream(Material.values())
-                    .filter(m -> m.name().contains("SHULKER_BOX"))
-                    .forEach(shulkerBoxes::add);
-        }
-    }
-
-
-    public Dupe(GoldenDupes plugin) {
-        this.plugin = plugin;
-
+    public Dupe() {
     }
 
     // loads cofig values regarding item limits
@@ -133,12 +62,12 @@ public abstract class Dupe {
             stacksize = Math.min(idealAmount, nonStackingStackSize);
         }
 
-        if (TOTEMS_EXIST && toDupe.getType() == TOTEM_MATERIAL) {
+        if (toDupe.getType() == MaterialUtil.TOTEM_MATERIAL) {
             dupe = dupeTotems;
             stacksize = Math.min(idealAmount, totemStackSize);
         }
 
-        if (SHULKERS_EXIST && shulkerBoxes.contains(toDupe.getType())) {
+        if (MaterialUtil.isShulkerBox(toDupe)) {
             dupe = dupeShulkers;
             stacksize = Math.min(idealAmount, shulkerStackSize);
         }

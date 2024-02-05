@@ -1,6 +1,8 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
+import online.umbcraft.libraries.utils.MaterialUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,8 +25,7 @@ public class AnvilDupe extends Dupe implements Listener {
 
     final private Set<Location> anvilsInUse = new HashSet<>();
 
-    public AnvilDupe(GoldenDupes plugin) {
-        super(plugin);
+    public AnvilDupe() {
     }
 
     // gives the player an extra item stack after their anvil breaks w/ a full inventory
@@ -52,7 +53,7 @@ public class AnvilDupe extends Dupe implements Listener {
             return;
 
         // return if anvil is not about to break
-        if(!l.getBlock().getType().name().equals("DAMAGED_ANVIL") || !l.getBlock().getType().name().equals("ANVIL"))
+        if(l.getBlock().getType() != MaterialUtil.ANVIL_MATERIAL)
             return;
 
         // preventing the anvil or the block beneath the anvil from being broken / pushed
@@ -60,7 +61,7 @@ public class AnvilDupe extends Dupe implements Listener {
         anvilsInUse.add(blockBelow);
 
         // check if anvil was destroyed by next tick
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () ->
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () ->
         {
             anvilsInUse.remove(l);
             anvilsInUse.remove(blockBelow);
@@ -76,8 +77,6 @@ public class AnvilDupe extends Dupe implements Listener {
     public void onBreakInUseAnvil(final BlockBreakEvent e) {
         if(anvilsInUse.isEmpty())
             return;
-
-        Location l = e.getBlock().getLocation();
 
         if(anvilsInUse.contains(e.getBlock().getLocation())) {
             e.setCancelled(true);
