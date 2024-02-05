@@ -8,7 +8,9 @@ import org.bukkit.inventory.ItemStack;
 public class MaterialUtil {
 
     public static boolean isTotem(Material m) {
-        if (GoldenDupes.getInstance().serverVersion() <= 12) {
+        if (GoldenDupes.getInstance().serverVersion() < 11) {
+            return false;
+        } else if (GoldenDupes.getInstance().serverVersion() <= 12) {
             return m == Material.valueOf("TOTEM");
         }
         return m == Material.TOTEM_OF_UNDYING;
@@ -22,6 +24,9 @@ public class MaterialUtil {
     }
 
     public static boolean isShulkerBox(ItemStack i) {
+        if (GoldenDupes.getInstance().serverVersion() < 11) {
+            return false;
+        }
         return i.getType().name().contains("SHULKER_BOX");
     }
 }
