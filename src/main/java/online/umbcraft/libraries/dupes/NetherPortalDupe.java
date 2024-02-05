@@ -4,7 +4,6 @@ import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,8 +16,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-import static online.umbcraft.libraries.config.ConfigPath.*;
-
 public class NetherPortalDupe extends Dupe implements Listener {
 
     // collection of all items removed by players from minecarts in the recent past
@@ -27,18 +24,16 @@ public class NetherPortalDupe extends Dupe implements Listener {
     // tracks all minecarts that have recently been transported through a portal
     final private Map<UUID, Integer> transported;
 
-    public NetherPortalDupe(final GoldenDupes plugin) {
-        super(plugin);
-
+    public NetherPortalDupe() {
         transported = new HashMap<>();
         dupedItems = new HashMap<>();
     }
 
     public void delayCartReuse(UUID minecart) {
         if(transported.containsKey(minecart))
-            plugin.getServer().getScheduler().cancelTask(transported.get(minecart));
+            Bukkit.getServer().getScheduler().cancelTask(transported.get(minecart));
 
-        int newID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        int newID = Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
             transported.remove(minecart);
         }, 20L);
 
@@ -89,7 +84,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
         final UUID cartUUID = ((StorageMinecart) holder).getUniqueId();
 
         final int slot = e.getSlot();
-        final int tickSpace = plugin.getConfig().getInt(ConfigPath.NETHER_TICKDELAY.path());
+        final int tickSpace = GoldenDupes.getInstance().getConfig().getInt(ConfigPath.NETHER_TICKDELAY.path());
         switch(e.getAction()) {
             case MOVE_TO_OTHER_INVENTORY:
             case COLLECT_TO_CURSOR:
@@ -115,7 +110,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         final List<DupedItem> cartItems = dupedItems.get(uuid);
         cartItems.add(cloned);
-        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(),
                 () -> {
                     cartItems.remove(cloned);
                     if(cartItems.isEmpty())

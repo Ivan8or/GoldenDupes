@@ -3,7 +3,6 @@ package online.umbcraft.libraries.dupes;
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +18,7 @@ import static online.umbcraft.libraries.config.ConfigPath.*;
 
 public class DonkeyDupe extends Dupe implements Listener {
 
-    public DonkeyDupe(final GoldenDupes plugin) {
-        super(plugin);
+    public DonkeyDupe() {
     }
 
 
@@ -33,7 +31,7 @@ public class DonkeyDupe extends Dupe implements Listener {
         if(vehicle == null)
             return;
 
-        if (plugin.getConfig().getBoolean(ConfigPath.DONKEY_BOATS.path()))
+        if (GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.DONKEY_BOATS.path()))
             traverseBoat(vehicle);
         else
             dupeInventory(vehicle);

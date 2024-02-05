@@ -23,8 +23,7 @@ public class PistonDupe extends Dupe implements Listener {
     // set of all item frames which qualify to have their items duped
     final private Set<UUID> dupableFrames = new HashSet<>();
 
-    public PistonDupe(final GoldenDupes plugin) {
-        super(plugin);
+    public PistonDupe() {
     }
 
     // marks an item frame as dupable if it was recently exposed to the back of a retracting piston
@@ -52,9 +51,9 @@ public class PistonDupe extends Dupe implements Listener {
                 continue;
 
             dupableFrames.add(frame.getUniqueId());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
                 dupableFrames.remove(frame.getUniqueId());
-            }, plugin.getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
+            }, GoldenDupes.getInstance().getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
             return;
         }
     }
@@ -75,7 +74,7 @@ public class PistonDupe extends Dupe implements Listener {
             return;
 
         // only players can trigger the dupe if non-players is set to false
-        if(!plugin.getConfig().getBoolean(ConfigPath.PISTON_NONPLAYER.path()) && !(e.getDamager() instanceof Player))
+        if(!GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.PISTON_NONPLAYER.path()) && !(e.getDamager() instanceof Player))
             return;
 
         // dupe the item and spawn it along with the original item

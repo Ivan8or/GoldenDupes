@@ -32,8 +32,7 @@ public class AutocraftDupe extends Dupe implements Listener {
     // whether a player used the crafting autocomplete menu, or just clicked / drag clicked the item into the table
     final private Map<UUID, Boolean> clickValidity = new TreeMap<>();
 
-    public AutocraftDupe(final GoldenDupes plugin) {
-        super(plugin);
+    public AutocraftDupe() {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -52,7 +51,7 @@ public class AutocraftDupe extends Dupe implements Listener {
         clickValidity.put(player, false);
 
 //        Bukkit.getAsyncScheduler();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
             clickValidity.remove(player);
         }, 1L);
     }
@@ -79,14 +78,14 @@ public class AutocraftDupe extends Dupe implements Listener {
         // prolongs the time until the extra items reset to 0 by one second
         cancelDupeClearTask(playerUUID);
         dupeTask.put(playerUUID,
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
                     dupeAmnt.remove(playerUUID);
                 }, 50L));
 
 
         // makes the next click(s) this game tick not give extra items; needed due to how PrepareItemCraftEvent gets triggered
         clickValidity.put(playerUUID, false);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
             clickValidity.remove(playerUUID);
         }, 0L);
 
@@ -156,9 +155,9 @@ public class AutocraftDupe extends Dupe implements Listener {
     // decides how much of a duped item a player receives
     private int decideAmount(final Material m, final UUID uuid) {
 
-        final FileConfiguration config = plugin.getConfig();
+        final FileConfiguration config = GoldenDupes.getInstance().getConfig();
 
-        if(plugin.getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
+        if(GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.AUTOCRAFT_VANILLA.path()))
             return 64;
 
         // defaults to the max amount of items the player can receive

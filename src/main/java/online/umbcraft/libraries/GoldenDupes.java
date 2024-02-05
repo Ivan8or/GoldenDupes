@@ -6,6 +6,7 @@ import online.umbcraft.libraries.dupes.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimpleBarChart;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -14,12 +15,15 @@ import java.util.Map;
 
 public final class GoldenDupes extends JavaPlugin {
 
+    private static GoldenDupes instance;
 
     public void onReloadCommand() {
         reloadConfig();
     }
 
     public void onEnable() {
+        instance = this;
+
         //bStats metrics
         Metrics metrics = new Metrics(this, 11145);
 
@@ -70,9 +74,7 @@ public final class GoldenDupes extends JavaPlugin {
 
         for(ConfigPath dupe: allDoFlags) {
             metrics.addCustomChart(new SimplePie(dupe.toString(),
-                    () -> {
-                        return getConfig().getString(dupe.path());
-                    }));
+                    () -> getConfig().getString(dupe.path())));
         }
 
 
@@ -84,33 +86,42 @@ public final class GoldenDupes extends JavaPlugin {
         // starts autocraft dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.AUTOCRAFT_DO.path())) {
             getServer().getPluginManager().registerEvents(
-                    new AutocraftDupe(this), this);
+                    new AutocraftDupe(), this);
         }
 
         // starts autocraft dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.DONKEY_DO.path())) {
             getServer().getPluginManager().registerEvents(
-                    new DonkeyDupe(this), this);
+                    new DonkeyDupe(), this);
         }
 
         // starts nether portal minecart dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.NETHER_DO.path())) {
             getServer().getPluginManager().registerEvents(
-                    new NetherPortalDupe(this), this);
+                    new NetherPortalDupe(), this);
         }
 
         // starts anvil dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.ANVIL_DO.path())) {
         getServer().getPluginManager().registerEvents(
-                new AnvilDupe(this), this);
+                new AnvilDupe(), this);
         }
 
         // starts piston dupe handler if the dupe is enabled
         if (getConfig().getBoolean(ConfigPath.PISTON_DO.path())) {
             getServer().getPluginManager().registerEvents(
-                    new PistonDupe(this), this);
+                    new PistonDupe(), this);
         }
 
+    }
+
+    public static final int serverVersion = Integer.parseInt(Bukkit.getServer().getBukkitVersion()
+            .replaceFirst("^(\\d+)\\.", "")
+            .replaceAll("\\.(.+)", "")
+    );
+
+    public static GoldenDupes getInstance() {
+        return instance;
     }
 
 }
