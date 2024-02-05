@@ -62,7 +62,7 @@ public abstract class Dupe {
             stacksize = Math.min(idealAmount, nonStackingStackSize);
         }
 
-        if (toDupe.getType() == MaterialUtil.TOTEM_MATERIAL) {
+        if (MaterialUtil.isTotem(toDupe.getType())) {
             dupe = dupeTotems;
             stacksize = Math.min(idealAmount, totemStackSize);
         }

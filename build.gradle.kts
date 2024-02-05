@@ -3,6 +3,12 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+val basePackage = "online.umbcraft.libs"
+
+group = "online.umbcraft.libraries"
+version = "1.5.3"
+description = "Golden Dupes - Dupes from the golden days of minecraft!"
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -16,18 +22,12 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
 }
 
-val basePackage = "online.umbcraft.libs"
-
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveFileName = "${project.name}-${project.version}.${archiveExtension.get()}"
     exclude("META-INF/**")
     minimize()
     relocate("org.bstats", "${basePackage}.org.bstats")
 }
-
-group = "online.umbcraft.libraries"
-version = "1.5.3"
-description = "Golden Dupes - Dupes from the golden days of minecraft!"
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"

@@ -73,9 +73,7 @@ public final class GoldenDupes extends JavaPlugin {
 
         for(ConfigPath dupe: allDoFlags) {
             metrics.addCustomChart(new SimplePie(dupe.toString(),
-                    () -> {
-                        return getConfig().getString(dupe.path());
-                    }));
+                    () -> getConfig().getString(dupe.path())));
         }
 
 
