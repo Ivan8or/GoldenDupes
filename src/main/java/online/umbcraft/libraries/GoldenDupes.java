@@ -6,6 +6,7 @@ import online.umbcraft.libraries.dupes.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimpleBarChart;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -114,12 +115,10 @@ public final class GoldenDupes extends JavaPlugin {
 
     }
 
-    public int serverVersion() {
-        return Integer.parseInt(getServer().getBukkitVersion()
-                .replaceFirst("^(\\d+)\\.", "")
-                .replaceAll("\\.(.+)", "")
-        );
-    }
+    public static final int serverVersion = Integer.parseInt(Bukkit.getServer().getBukkitVersion()
+            .replaceFirst("^(\\d+)\\.", "")
+            .replaceAll("\\.(.+)", "")
+    );
 
     public static GoldenDupes getInstance() {
         return instance;
