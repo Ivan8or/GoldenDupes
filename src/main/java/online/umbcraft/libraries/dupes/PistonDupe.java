@@ -51,13 +51,17 @@ public class PistonDupe extends Dupe implements Listener {
             if (!(frame instanceof ItemFrame))
                 continue;
             dupableFrames.add(frame.getUniqueId());
-            Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
-                dupableFrames.remove(frame.getUniqueId());
+            if (GoldenDupes.isFolia) {
+                Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
+                    dupableFrames.remove(frame.getUniqueId());
                 },GoldenDupes.getInstance().getConfig().getLong((ConfigPath.PISTON_TICKDELAY.path())));
 
-            //Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
-            //    dupableFrames.remove(frame.getUniqueId());
-            //}, GoldenDupes.getInstance().getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
+            }
+            else {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
+                    dupableFrames.remove(frame.getUniqueId());
+                }, GoldenDupes.getInstance().getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
+            }
             return;
         }
     }
