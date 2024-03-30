@@ -1,6 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
+import online.umbcraft.libraries.config.ConfigPath;
 import online.umbcraft.libraries.utils.MaterialUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,11 +32,11 @@ public class AnvilDupe extends Dupe implements Listener {
     // gives the player an extra item stack after their anvil breaks w/ a full inventory
     @EventHandler(priority = EventPriority.HIGH)
     public void onAnvilUse(final InventoryClickEvent e) {
-        Inventory t = e.getClickedInventory();
+        Inventory inv = e.getClickedInventory();
 
-        if (t == null)
+        if (inv == null)
             return;
-        if (t.getType() != InventoryType.ANVIL)
+        if (inv.getType() != InventoryType.ANVIL)
             return;
         if(e.getCurrentItem() == null)
             return;
@@ -49,8 +50,11 @@ public class AnvilDupe extends Dupe implements Listener {
         Player p = (Player) e.getWhoClicked();
 
         // return if player has free inventory slot
-        if(p.getInventory().firstEmpty() != -1)
-            return;
+        if (GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.ANVIL_FULLINV.path())) {
+            if(p.getInventory().firstEmpty() != -1)
+                return;
+        }
+
 
         // return if anvil is not about to break
         if(!MaterialUtil.isAnvil(l.getBlock()))
@@ -61,16 +65,31 @@ public class AnvilDupe extends Dupe implements Listener {
         anvilsInUse.add(blockBelow);
 
         // check if anvil was destroyed by next tick
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () ->
-        {
-            anvilsInUse.remove(l);
-            anvilsInUse.remove(blockBelow);
 
-            if (l.getBlock().getType() == Material.AIR && toDupe != null) {
-                Item dropped = p.getWorld().dropItem(p.getLocation(), dupe(toDupe, toDupe.getAmount()));
-                dropped.setVelocity(p.getEyeLocation().getDirection());
-            }
-        }, 1L);
+        ItemStack item_stack = dupe(toDupe, toDupe.getAmount());
+        if (GoldenDupes.isFolia) {
+            Bukkit.getRegionScheduler().runDelayed(GoldenDupes.getInstance(), p.getLocation() , t -> {
+                anvilsInUse.remove(l);
+                anvilsInUse.remove(blockBelow);
+
+                if (l.getBlock().getType() == Material.AIR && toDupe != null) {
+                    Item dropped = p.getWorld().dropItem(p.getLocation(), item_stack);
+                    dropped.setVelocity(p.getEyeLocation().getDirection());
+                }
+            }, 1L);
+        }
+        else {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () ->
+            {
+                anvilsInUse.remove(l);
+                anvilsInUse.remove(blockBelow);
+
+                if (l.getBlock().getType() == Material.AIR && toDupe != null) {
+                    Item dropped = p.getWorld().dropItem(p.getLocation(), dupe(toDupe, toDupe.getAmount()));
+                    dropped.setVelocity(p.getEyeLocation().getDirection());
+                }
+            }, 1L);
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
