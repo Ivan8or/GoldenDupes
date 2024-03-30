@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import javax.swing.*;
 import java.util.*;
 
 public class PistonDupe extends Dupe implements Listener {
@@ -49,11 +50,14 @@ public class PistonDupe extends Dupe implements Listener {
         for(Entity frame : nearbyEntities) {
             if (!(frame instanceof ItemFrame))
                 continue;
-
             dupableFrames.add(frame.getUniqueId());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
+            Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                 dupableFrames.remove(frame.getUniqueId());
-            }, GoldenDupes.getInstance().getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
+                },GoldenDupes.getInstance().getConfig().getLong((ConfigPath.PISTON_TICKDELAY.path())));
+
+            //Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
+            //    dupableFrames.remove(frame.getUniqueId());
+            //}, GoldenDupes.getInstance().getConfig().getLong(ConfigPath.PISTON_TICKDELAY.path()));
             return;
         }
     }
@@ -62,7 +66,6 @@ public class PistonDupe extends Dupe implements Listener {
     // dupes the item in an item frame as it is being broken (if it was marked as dupable)
     @EventHandler(priority = EventPriority.HIGH)
     public void onBreakFrame(EntityDamageByEntityEvent e) {
-
         // only continue if an itemframe is damaged
         if(!(e.getEntity() instanceof ItemFrame))
             return;
@@ -76,9 +79,18 @@ public class PistonDupe extends Dupe implements Listener {
         // only players can trigger the dupe if non-players is set to false
         if(!GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.PISTON_NONPLAYER.path()) && !(e.getDamager() instanceof Player))
             return;
-
         // dupe the item and spawn it along with the original item
-        ItemStack duped = this.dupe(frame.getItem(),1);
-        frame.getWorld().dropItemNaturally(frame.getLocation(), duped);
+        if (GoldenDupes.isFolia) {
+            Bukkit.getRegionScheduler().run(GoldenDupes.getInstance(),frame.getLocation(), t -> {
+                ItemStack duped = this.dupe(frame.getItem(),1);
+                frame.getWorld().dropItemNaturally(frame.getLocation(), duped);
+            });
+        }
+        else {
+            ItemStack duped = this.dupe(frame.getItem(),1);
+            frame.getWorld().dropItemNaturally(frame.getLocation(), duped);
+        }
+
+
     }
 }
