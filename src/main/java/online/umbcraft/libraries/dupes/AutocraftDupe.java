@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import static io.papermc.paper.threadedregions.scheduler.ScheduledTask.ExecutionState.IDLE;
 
 public class AutocraftDupe extends Dupe implements Listener {
 
