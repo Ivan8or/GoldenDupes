@@ -16,7 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import javax.swing.*;
+
 import java.util.*;
 
 public class PistonDupe extends Dupe implements Listener {
