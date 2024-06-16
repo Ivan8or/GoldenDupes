@@ -38,7 +38,7 @@ public enum ConfigPath {
     //      is the anvil dupe enabled?
     ANVIL_DO(ConfigRoot.ANVIL, "enabled", "true"),
 
-
+    ANVIL_FULLINV(ConfigRoot.ANVIL, "full-inventory", "true"),
 
     //      is the piston dupe enabled?
     PISTON_DO(ConfigRoot.PISTON, "enabled", "true"),

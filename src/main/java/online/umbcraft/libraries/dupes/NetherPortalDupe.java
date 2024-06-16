@@ -1,5 +1,6 @@
 package online.umbcraft.libraries.dupes;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.config.ConfigPath;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import javax.swing.*;
 import java.util.*;
 
 public class NetherPortalDupe extends Dupe implements Listener {
@@ -24,20 +26,38 @@ public class NetherPortalDupe extends Dupe implements Listener {
     // tracks all minecarts that have recently been transported through a portal
     final private Map<UUID, Integer> transported;
 
+    // tracks all minecarts that have recently been transported trough a portal with Folia ScheudledTask Type
+    final private Map<UUID, ScheduledTask> transported_folia;
+
     public NetherPortalDupe() {
         transported = new HashMap<>();
+        transported_folia = new HashMap<>();
         dupedItems = new HashMap<>();
     }
 
     public void delayCartReuse(UUID minecart) {
-        if(transported.containsKey(minecart))
-            Bukkit.getServer().getScheduler().cancelTask(transported.get(minecart));
+        if(transported.containsKey(minecart)) {
+            if (GoldenDupes.isFolia) {
+                transported_folia.get(minecart).cancel();
+            }
+            else {
+                Bukkit.getServer().getScheduler().cancelTask(transported.get(minecart));
+            }
+        }
+        if (GoldenDupes.isFolia) {
+            ScheduledTask newID  = Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
+                transported_folia.remove(minecart);
+            }, 20L);
+            transported_folia.put(minecart, newID);
+        }
+        else {
+            int newID = Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
+                transported.remove(minecart);
+            }, 20L);
+            transported.put(minecart, newID);
+        }
 
-        int newID = Bukkit.getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(), () -> {
-            transported.remove(minecart);
-        }, 20L);
 
-        transported.put(minecart, newID);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -48,11 +68,19 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         StorageMinecart cart = (StorageMinecart) e.getEntity();
         UUID cartID = cart.getUniqueId();
-
-        if(transported.containsKey(cartID)) {
-            delayCartReuse(cartID);
-            return;
+        if (GoldenDupes.isFolia) {
+            if(transported_folia.containsKey(cartID)) {
+                delayCartReuse(cartID);
+                return;
+            }
         }
+        else {
+            if(transported.containsKey(cartID)) {
+                delayCartReuse(cartID);
+                return;
+            }
+        }
+
         delayCartReuse(cartID);
 
         List<DupedItem> items = dupedItems.get(cart.getUniqueId());
@@ -110,12 +138,22 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         final List<DupedItem> cartItems = dupedItems.get(uuid);
         cartItems.add(cloned);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(),
-                () -> {
-                    cartItems.remove(cloned);
-                    if(cartItems.isEmpty())
-                        dupedItems.remove(uuid);
-                }, ticks);
+        if (GoldenDupes.isFolia) {
+            Bukkit.getServer().getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
+                cartItems.remove(cloned);
+                if(cartItems.isEmpty())
+                    dupedItems.remove(uuid);
+            }, ticks);
+        }
+        else {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GoldenDupes.getInstance(),
+                    () -> {
+                        cartItems.remove(cloned);
+                        if(cartItems.isEmpty())
+                            dupedItems.remove(uuid);
+                    }, ticks);
+        }
+
     }
 
     private class DupedItem {

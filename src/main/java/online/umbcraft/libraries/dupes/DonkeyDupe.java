@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-import static online.umbcraft.libraries.config.ConfigPath.*;
 
 
 public class DonkeyDupe extends Dupe implements Listener {
