@@ -8,23 +8,23 @@ import org.bukkit.inventory.ItemStack;
 public class MaterialUtil {
 
     public static boolean isTotem(Material m) {
-        if (GoldenDupes.serverVersion < 11) {
+        if (GoldenDupes.majorVersion < 11) {
             return false;
-        } else if (GoldenDupes.serverVersion <= 12) {
+        } else if (GoldenDupes.majorVersion <= 12) {
             return m == Material.valueOf("TOTEM");
         }
         return m == Material.TOTEM_OF_UNDYING;
     }
 
     public static boolean isAnvil(Block b) {
-        if (GoldenDupes.serverVersion <= 12) {
+        if (GoldenDupes.majorVersion <= 12) {
             return b.getType() == Material.valueOf("ANVIL") && b.getData() == 10; // block data of Damaged Anvil is 10 in 1.12.2
         }
         return b.getType() == Material.DAMAGED_ANVIL;
     }
 
     public static boolean isShulkerBox(ItemStack i) {
-        if (GoldenDupes.serverVersion < 11) {
+        if (GoldenDupes.majorVersion < 11) {
             return false;
         }
         return i.getType().name().contains("SHULKER_BOX");
