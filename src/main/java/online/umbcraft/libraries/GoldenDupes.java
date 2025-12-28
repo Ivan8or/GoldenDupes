@@ -8,6 +8,7 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,13 @@ public final class GoldenDupes extends JavaPlugin {
 
     public void onEnable() {
         instance = this;
+
+        File configFile = new File(instance.getDataFolder(), "config.yml");
+
+        if (!configFile.exists()) {
+            instance.saveDefaultConfig();
+            return;
+        }
 
         //bStats metrics
         Metrics metrics = new Metrics(this, 11145);
