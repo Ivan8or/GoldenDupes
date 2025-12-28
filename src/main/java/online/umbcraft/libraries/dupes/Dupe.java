@@ -1,13 +1,20 @@
 package online.umbcraft.libraries.dupes;
 
+import online.umbcraft.libraries.GoldenDupes;
 import online.umbcraft.libraries.utils.MaterialUtil;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import static online.umbcraft.libraries.config.ConfigPath.*;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import static online.umbcraft.libraries.utils.ConfigPath.*;
 
 public abstract class Dupe {
+
+    private static boolean debugLogs;
 
     private static boolean dupeNonStacking;
     private static int nonStackingStackSize;
@@ -17,6 +24,8 @@ public abstract class Dupe {
 
     private static boolean dupeTotems;
     private static int totemStackSize;
+
+    private static List<Map> dupeRules;
 
     public Dupe() {
     }
@@ -31,6 +40,8 @@ public abstract class Dupe {
 
         dupeTotems = config.getBoolean(TOTEMS_DO_DUPE.path());
         totemStackSize = config.getInt(TOTEMS_STACKSIZE.path());
+
+        dupeRules = (List<Map>) config.getList(DUPE_RULES.path());
     }
 
 
@@ -56,6 +67,22 @@ public abstract class Dupe {
         boolean dupe = true;
         int stacksize = idealAmount;
         boolean isSize64 = toDupe.getMaxStackSize() == 64;
+
+        if(!dupeRules.isEmpty()) {
+            Map match = dupeRules.stream()
+                .filter(e -> toDupe.getType().toString().matches((String) e.get("match")))
+                .findFirst().orElse(null);
+            if(match != null){
+                int matchStackTo = (Integer) match.getOrDefault("stack-to", toDupe.getMaxStackSize());
+                if(matchStackTo <= 0) {
+                    matchStackTo = toDupe.getMaxStackSize();
+                }
+                boolean matchDupe = (Boolean) match.get("dupe");
+                return matchDupe ? Math.min(idealAmount, matchStackTo) : 0;
+            }
+        }
+
+        // legacy controls
 
         if (!isSize64) {
             dupe = dupeNonStacking;

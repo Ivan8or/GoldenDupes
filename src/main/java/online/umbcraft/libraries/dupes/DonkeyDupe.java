@@ -1,7 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
-import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.utils.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;

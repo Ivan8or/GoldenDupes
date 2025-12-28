@@ -1,7 +1,7 @@
 ##################################
 #    GoldenDupes Dupe Plugin     #
 #    by Ivan Volkov (Ivan8or)    #
-#    @Ivan8or#7412 on discord    #
+#      @ivan8or on discord       #
 ##################################
 
 #  1.12 autocraft dupe
@@ -51,6 +51,9 @@ anvil-dupe:
   # is this dupe enabled?
   enabled: true
 
+  # require a full inventory to perform the dupe (vanilla behavior is true)
+  full-inventory: true
+
 
 # 1.12 piston dupe
 piston-dupe:
@@ -89,6 +92,19 @@ totems:
   dupe: true
 # what is the max duped stack size?
   stack-to: 4
+
+# advanced item dupe permissions
+# all material names: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+# 'match' is a regex expression which matches against material names
+# what is regex? https://gist.github.com/cat-lin-morgan/49bd128340e9e452f837b4fae76df091
+dupe-rules: []
+
+#dupe-rules:
+#  - match: "(.*_)?CANDLE$"
+#    dupe: false
+#  - match: ".*"
+#    dupe: true
+#    stack-to: 16
 
 
 

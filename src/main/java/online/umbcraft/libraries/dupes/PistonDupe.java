@@ -1,7 +1,7 @@
 package online.umbcraft.libraries.dupes;
 
 import online.umbcraft.libraries.GoldenDupes;
-import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.utils.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -51,7 +51,7 @@ public class PistonDupe extends Dupe implements Listener {
             if (!(frame instanceof ItemFrame))
                 continue;
             dupableFrames.add(frame.getUniqueId());
-            if (GoldenDupes.isFolia) {
+            if (GoldenDupes.isFolia()) {
                 Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                     dupableFrames.remove(frame.getUniqueId());
                 },GoldenDupes.getInstance().getConfig().getLong((ConfigPath.PISTON_TICKDELAY.path())));
@@ -84,7 +84,7 @@ public class PistonDupe extends Dupe implements Listener {
         if(!GoldenDupes.getInstance().getConfig().getBoolean(ConfigPath.PISTON_NONPLAYER.path()) && !(e.getDamager() instanceof Player))
             return;
         // dupe the item and spawn it along with the original item
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             Bukkit.getRegionScheduler().run(GoldenDupes.getInstance(),frame.getLocation(), t -> {
                 ItemStack duped = this.dupe(frame.getItem(),1);
                 frame.getWorld().dropItemNaturally(frame.getLocation(), duped);

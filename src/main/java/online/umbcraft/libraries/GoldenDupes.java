@@ -1,7 +1,6 @@
 package online.umbcraft.libraries;
 
-import online.umbcraft.libraries.config.ConfigAutofill;
-import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.utils.ConfigPath;
 import online.umbcraft.libraries.dupes.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimpleBarChart;
@@ -77,10 +76,6 @@ public final class GoldenDupes extends JavaPlugin {
                     () -> getConfig().getString(dupe.path())));
         }
 
-
-        // fixing up config if it doesn't have some particular settings
-        ConfigAutofill.autofill(this);
-
         Dupe.loadConfig(getConfig());
 
         // starts autocraft dupe handler if the dupe is enabled
@@ -126,6 +121,15 @@ public final class GoldenDupes extends JavaPlugin {
 
     public static GoldenDupes getInstance() {
         return instance;
+    }
+
+    public static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
 }

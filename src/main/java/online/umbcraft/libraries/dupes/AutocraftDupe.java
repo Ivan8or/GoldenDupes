@@ -2,7 +2,7 @@ package online.umbcraft.libraries.dupes;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import online.umbcraft.libraries.GoldenDupes;
-import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.utils.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,7 +56,7 @@ public class AutocraftDupe extends Dupe implements Listener {
     public void denyDupeClick(final UUID player) {
         clickValidity.put(player, false);
 
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                 clickValidity.remove(player);
             }, 1L);
@@ -90,7 +90,7 @@ public class AutocraftDupe extends Dupe implements Listener {
 
         // prolongs the time until the extra items reset to 0 by one second
         cancelDupeClearTask(playerUUID);
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             dupeTask_Folia.put(playerUUID,
                     Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                         dupeAmnt.remove(playerUUID);
@@ -105,7 +105,7 @@ public class AutocraftDupe extends Dupe implements Listener {
 
         // makes the next click(s) this game tick not give extra items; needed due to how PrepareItemCraftEvent gets triggered
         clickValidity.put(playerUUID, false);
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                 clickValidity.remove(playerUUID);
             }, 1L);
@@ -121,7 +121,7 @@ public class AutocraftDupe extends Dupe implements Listener {
 
     // cancels an existing queued task which would set the player's extra item count to zero
     private void cancelDupeClearTask(final UUID player) {
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             final ScheduledTask lastTask = dupeTask_Folia.getOrDefault(player, null);
             if (lastTask != null) {
                 if (lastTask.getExecutionState().toString().equals("IDLE")) {
@@ -151,7 +151,7 @@ public class AutocraftDupe extends Dupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerKick(final PlayerKickEvent e) {
         dupeAmnt.remove(e.getPlayer().getUniqueId());
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             dupeTask_Folia.remove(e.getPlayer().getUniqueId());
         }
         else {
@@ -162,7 +162,7 @@ public class AutocraftDupe extends Dupe implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerLeave(final PlayerQuitEvent e) {
         dupeAmnt.remove(e.getPlayer().getUniqueId());
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             dupeTask_Folia.remove(e.getPlayer().getUniqueId());
 }
         else {
@@ -193,7 +193,7 @@ public class AutocraftDupe extends Dupe implements Listener {
 
         p.getInventory().setMaxStackSize(Math.max(currentMaxStack, newMaxStack));
 
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             Bukkit.getRegionScheduler().run(GoldenDupes.getInstance(), p.getLocation(), t -> {
                 Item onGround = p.getLocation().getWorld().dropItem(p.getLocation(), duped);
                 onGround.setPickupDelay(1);

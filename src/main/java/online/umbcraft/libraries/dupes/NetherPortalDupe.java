@@ -2,7 +2,7 @@ package online.umbcraft.libraries.dupes;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import online.umbcraft.libraries.GoldenDupes;
-import online.umbcraft.libraries.config.ConfigPath;
+import online.umbcraft.libraries.utils.ConfigPath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.minecart.StorageMinecart;
@@ -15,7 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import javax.swing.*;
 import java.util.*;
 
 public class NetherPortalDupe extends Dupe implements Listener {
@@ -26,7 +25,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
     // tracks all minecarts that have recently been transported through a portal
     final private Map<UUID, Integer> transported;
 
-    // tracks all minecarts that have recently been transported trough a portal with Folia ScheudledTask Type
+    // tracks all minecarts that have recently been transported trough a portal with Folia ScheduledTask Type
     final private Map<UUID, ScheduledTask> transported_folia;
 
     public NetherPortalDupe() {
@@ -37,14 +36,14 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
     public void delayCartReuse(UUID minecart) {
         if(transported.containsKey(minecart)) {
-            if (GoldenDupes.isFolia) {
+            if (GoldenDupes.isFolia()) {
                 transported_folia.get(minecart).cancel();
             }
             else {
                 Bukkit.getServer().getScheduler().cancelTask(transported.get(minecart));
             }
         }
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             ScheduledTask newID  = Bukkit.getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                 transported_folia.remove(minecart);
             }, 20L);
@@ -68,7 +67,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         StorageMinecart cart = (StorageMinecart) e.getEntity();
         UUID cartID = cart.getUniqueId();
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             if(transported_folia.containsKey(cartID)) {
                 delayCartReuse(cartID);
                 return;
@@ -138,7 +137,7 @@ public class NetherPortalDupe extends Dupe implements Listener {
 
         final List<DupedItem> cartItems = dupedItems.get(uuid);
         cartItems.add(cloned);
-        if (GoldenDupes.isFolia) {
+        if (GoldenDupes.isFolia()) {
             Bukkit.getServer().getGlobalRegionScheduler().runDelayed(GoldenDupes.getInstance(), t -> {
                 cartItems.remove(cloned);
                 if(cartItems.isEmpty())
