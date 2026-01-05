@@ -70,14 +70,14 @@ public abstract class Dupe {
 
         if(!dupeRules.isEmpty()) {
             Map match = dupeRules.stream()
-                .filter(e -> toDupe.getType().toString().matches((String) e.get("match")))
+                .filter(e -> toDupe.getType().toString().matches((String) e.getOrDefault("match", "THIS_MATERIAL_DOES_NOT_EXIST_AAAAAAAAH")))
                 .findFirst().orElse(null);
             if(match != null){
                 int matchStackTo = (Integer) match.getOrDefault("stack-to", toDupe.getMaxStackSize());
                 if(matchStackTo <= 0) {
                     matchStackTo = toDupe.getMaxStackSize();
                 }
-                boolean matchDupe = (Boolean) match.get("dupe");
+                boolean matchDupe = (Boolean) match.getOrDefault("dupe", false);
                 return matchDupe ? Math.min(idealAmount, matchStackTo) : 0;
             }
         }

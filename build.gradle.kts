@@ -6,7 +6,7 @@ plugins {
 val basePackage = "online.umbcraft.libs"
 
 group = "online.umbcraft.libraries"
-version = "1.6.0"
+version = "1.6.2"
 description = "Golden Dupes - Dupes from the golden days of minecraft!"
 
 repositories {
